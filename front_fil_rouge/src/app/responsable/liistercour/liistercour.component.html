@@ -1,0 +1,15 @@
+<!-- liste-cours.component.html -->
+
+<div class="container mx-auto p-4">
+    <h1 class="text-3xl font-semibold mb-4">Liste des Cours</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div *ngFor="let cour of cours" class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold mb-2">{{ cour.module }}</h2>
+        <p class="text-black">{{ cour.professeurs }}</p>
+        <p class="text-black">{{ cour.nbr_heure }}</p>
+
+      </div>
+    </div>
+  </div>
+  
+  
