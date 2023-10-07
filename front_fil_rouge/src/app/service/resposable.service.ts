@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Session  } from "../model/session";
 import { Cours } from '../cours';
-const API_BASE_URL = 'http://127.0.0.1:8001/api'; // Remplacez ceci par l'URL de votre API Laravel
+const API_BASE_URL = 'http://127.0.0.1:8000/api'; // Remplacez ceci par l'URL de votre API Laravel
 
 @Injectable({
   providedIn: 'root',
@@ -53,12 +53,18 @@ export class ApiService {
   createCours(data: any[]): Observable<any[]> {
     return this.http.post<any>(`${API_BASE_URL}/cours`, data);
   }
+  createSeesion(data: any[]): Observable<any[]> {
+    return this.http.post<any>(`${API_BASE_URL}/sessions`, data);
+  }
   createAnnee(data: any): Observable<any> {
     return this.http.post<any>(`${API_BASE_URL}/annees`, data);
   }
   getSessionsByDate(date: string): Observable<Session[]> {
     const url = `${API_BASE_URL}/${date}`;
     return this.http.get<Session[]>(url);
+  }
+  getCoursClasses(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE_URL}/cours/classe`);
   }
   // Répétez ces méthodes pour les salles, les semestres, les cours, etc.
 }

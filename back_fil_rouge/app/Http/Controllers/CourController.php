@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CourResource;
+use App\Http\Resources\CoursclasseResource;
+use App\Models\CourClasses;
 use App\Models\Cours;
 use Illuminate\Http\Request;
 
@@ -13,6 +15,12 @@ class CourController extends Controller
 {
     $cours = Cours::findOrFail($id);
     return new CourResource($cours);
+}
+public function getCourclasse(){
+    $courclasse=CourClasses::all();
+    return CoursclasseResource::collection($courclasse);
+
+    
 }
 
     public function index(){

@@ -19,6 +19,7 @@ import { ModalComponent } from './modal/modal.component';
 import { RegistreComponent } from './connect/registre/registre.component';
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
 import { PlanifiercourComponent } from './planifiercour/planifiercour.component';
+import { PlanifiersessionComponent } from './responsable/planifiersession/planifiersession.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +28,8 @@ import { PlanifiercourComponent } from './planifiercour/planifiercour.component'
     ModalComponent,
     RegistreComponent,
     LiistercourComponent,
-    PlanifiercourComponent, // Déclarez ResponsableComponent ici
+    PlanifiercourComponent,
+    PlanifiersessionComponent, // Déclarez ResponsableComponent ici
   ],
   imports: [
     BrowserModule,

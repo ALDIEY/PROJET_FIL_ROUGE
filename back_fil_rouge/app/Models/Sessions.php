@@ -17,13 +17,13 @@ class Sessions extends Model
         'heure_fin',
         'duree',
         'etat',
-        'cours_id',
+        'cour_classes_id',
         'attaches_id',
         'responsables_id',
         'salles_id',
     ];
     public function cours()
     {
-    return $this->belongsTo(Cours::class);
+    return $this->belongsTo(CourClasses::class);
     }
 }

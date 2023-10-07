@@ -6,11 +6,13 @@ import { ResponsableComponent } from './responsable/responsable.component';
 import { AjoutrespoComponent } from './responsable/ajoutrespo/ajoutrespo.component'; // Assurez-vous d'importer le composant enfant ici
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
 import { PlanifiercourComponent } from "./planifiercour/planifiercour.component";
+import { PlanifiersessionComponent } from './responsable/planifiersession/planifiersession.component';
 const routes: Routes = [
   { path: 'responsable', component: ResponsableComponent },
   { path: 'ajoutrespo', component: AjoutrespoComponent },
   { path: 'listercour', component: LiistercourComponent },
   { path: 'planifierCour', component:  PlanifiercourComponent },
+  {path:'planifiersession', component: PlanifiersessionComponent      },
 
 
   { path: 'connect', loadChildren: () => import('./connect/connect.module').then(m => m.ConnectModule) }

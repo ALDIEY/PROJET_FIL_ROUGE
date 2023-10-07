@@ -49,7 +49,7 @@ getModule(){
 this.apiService.getModules().subscribe((data:any)=>{
 
 this.modules=data
-// console.log(this.modules);
+console.log(this.modules);
 })
 }
 getProf(){

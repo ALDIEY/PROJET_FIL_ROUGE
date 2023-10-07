@@ -15,14 +15,13 @@ class CreateSessionRequest extends FormRequest
     {
         return [
             'etat' => 'nullable|in:attente,confirmer',
-            'cours_id' => 'required|exists:cours,id',
+            'cour_classes_id' => 'required|exists:cour_classes,id',
             'attache_id' => 'nullable|exists:attaches,id',
             'responsables_id' => 'nullable|exists:responsables,id',
-    
-            'cours_id' => 'required|exists:cours,id',
             'date' => 'required|date',
             'heure_debut' => 'required|date_format:H:i:s',
-            'heure_fin' => 'required|date_format:H:i:s',
+             'heure_fin' => 'required|date_format:H:i:s',
+
             'salles_id' => 'required_if:mode,en_presentiel|exists:salles,id',
         ];
     }

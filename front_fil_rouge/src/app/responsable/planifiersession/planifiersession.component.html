@@ -1,0 +1,52 @@
+<div class="flex justify-center items-center h-screen">
+    <div class="p-4 w-full max-w-4xl bg-gray-100">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <form [formGroup]="sessionForm"  (submit)="planifierSession()">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="mb-4">
+                        <label for="cours" class="block text-sm font-medium text-gray-600 mb-2">Cours</label>
+                        <select id="cours" name="cours" class="w-full p-2 border border-gray-300 rounded" formControlName="cour_classes_id">
+                            <option value="">Sélectionnez un cours</option>
+                            <option *ngFor="let cour of courclasse" [value]="cour.id">{{ cour.classe_libelle }}</option>
+                          </select>
+                    </div>
+                   
+                    <div class="mb-4">
+                        <label for="mode" class="block text-sm font-medium text-gray-600 mb-2">Mode</label>
+                        <select id="mode" name="mode" class="w-full p-2 border border-gray-300 rounded" formControlName="mode">
+                            <option value="en_ligne">En ligne</option>
+                            <option value="en_presentiel">En présentiel</option>
+                        </select>
+                    </div>
+                    <div *ngIf="sessionForm.get('mode')?.value === 'en_presentiel'">
+                        <div class="mb-4">
+                          <label for="salles_id" class="block text-sm font-medium text-gray-600 mb-2">Salle</label>
+                          <select id="salles_id" name="salles_id" class="w-full p-2 border border-gray-300 rounded" formControlName="salles_id">
+                            <option value="">Sélectionnez une salle</option>
+                            <option *ngFor="let salle of salles" [value]="salle.id">{{ salle.nom }}</option>
+                          </select>
+                        </div>
+                      </div>
+                    
+                    <div class="mb-4">
+                        <label for="date" class="block text-sm font-medium text-gray-600 mb-2">Date</label>
+                        <input type="date" id="date" name="date" class="w-full p-2 border border-gray-300 rounded" formControlName="date">
+                    </div>
+                    <div class="mb-4">
+                        <label for="heure_debut" class="block text-sm font-medium text-gray-600 mb-2">Heure de début</label>
+                        <input type="time" id="heure_debut" name="heure_debut" class="w-full p-2 border border-gray-300 rounded" formControlName="heure_debut">
+                    </div>
+                    <div class="mb-4">
+                        <label for="heure_fin" class="block text-sm font-medium text-gray-600 mb-2">Heure de fin</label>
+                        <input type="time" id="heure_fin" name="heure_fin" class="w-full p-2 border border-gray-300 rounded" formControlName="heure_fin">
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-green-200">
+                        Soumettre
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -70,3 +70,5 @@ Route::post('/sessions', [SessionController::class, 'store']);
 
 
 Route::get('/modules',[ModuleController::class,'index']);
+
+Route::get('cours/classe',[CourController::class,'getCourclasse']);

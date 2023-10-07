@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class CourClasses extends Model
 {
     use HasFactory;
-    public function cours(){
-    
-    return $this->belongsTo(Cours::class);
-    }
-    public function classes()
+    protected $table = 'cour_classes';
+    public function cours()
     {
-    
-        return $this->belongsTo(Classes::class);
-        }
+        return $this->belongsTo(Cours::class, 'cours_id');
+    }
+
+    public function classe()
+    {
+        return $this->belongsTo(Classes::class, 'classes_id');
+    }
 }
