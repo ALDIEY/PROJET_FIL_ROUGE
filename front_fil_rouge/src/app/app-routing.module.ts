@@ -7,13 +7,21 @@ import { AjoutrespoComponent } from './responsable/ajoutrespo/ajoutrespo.compone
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
 import { PlanifiercourComponent } from "./planifiercour/planifiercour.component";
 import { PlanifiersessionComponent } from './responsable/planifiersession/planifiersession.component';
+import { GestionclasseComponent } from './responsable/gestionclasse/gestionclasse.component';
+import { HomeComponent } from './home/home.component';
+import { RegistreComponent } from './connect/registre/registre.component';
+import { LoginComponent } from './connect/login/login.component';
 const routes: Routes = [
   { path: 'responsable', component: ResponsableComponent },
-  { path: 'ajoutrespo', component: AjoutrespoComponent },
+  { path: 'voirsession', component: AjoutrespoComponent },
   { path: 'listercour', component: LiistercourComponent },
   { path: 'planifierCour', component:  PlanifiercourComponent },
   {path:'planifiersession', component: PlanifiersessionComponent      },
-
+  {path:'gestionclasse', component: GestionclasseComponent     },
+  {path:"",component:HomeComponent},
+  {path:"register",component:RegistreComponent},
+  {path:"logn",component:LoginComponent},
+  {path:"user",component:HomeComponent}
 
   { path: 'connect', loadChildren: () => import('./connect/connect.module').then(m => m.ConnectModule) }
   // { path: 'ajoutrespo', component: AjoutrespoComponent },

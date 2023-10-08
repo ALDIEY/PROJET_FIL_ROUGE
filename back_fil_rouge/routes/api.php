@@ -48,9 +48,19 @@ Route::get('/annees',[AnneeController::class,'index']);
 Route::get('/sessions/{date}', [SessionController::class,'getSessionsByDate']);
 
 
+// {
+//   "password":"cheikhaldiey",
+//   "login":"aldiey"
+  
+//   }
+
 
 Route::post('/classes', [ClasseController::class, 'store']);
 Route::get('/classes', [ClasseController::class, 'index']);
+Route::get('/planifier',[ClasseController::class,'getClassesPlanifiees']);
+Route::get('/nonplanifier',[ClasseController::class,'getClassesNonPlanifiees']);
+Route::post('/classeplanifier ', [ClasseController::class, 'planifierClasses']);
+Route::get('/filiere',[ClasseController::class,'getFiliere']);
 
 
 Route::post('/professeurs', [ProfesseurController::class, 'store']);
@@ -65,6 +75,9 @@ Route::get('/semestres', [SemestreController::class, 'index']);
 
 Route::post('/cours', [CourController::class, 'store']);
 Route::get('/cours',[CourController::class, 'index']);
+Route::get('/encours',[CourController::class,'getCoursEnCours']);
+Route::get('/terminer',[CourController::class,'getCoursTermines']);
+
 
 Route::post('/sessions', [SessionController::class, 'store']);
 
@@ -72,3 +85,4 @@ Route::post('/sessions', [SessionController::class, 'store']);
 Route::get('/modules',[ModuleController::class,'index']);
 
 Route::get('cours/classe',[CourController::class,'getCourclasse']);
+

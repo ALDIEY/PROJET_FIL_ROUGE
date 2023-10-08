@@ -10,4 +10,5 @@ class Classes extends Model
     use HasFactory;
 
    protected $fillable=['libelle','filieres_id'];
+   
 }

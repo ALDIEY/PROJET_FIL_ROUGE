@@ -37,7 +37,7 @@ ngOnInit(): void {
   // this.getClasseControl(inde)
 }
 getClasse(){
-this.apiService.getClasses().subscribe((data:any)=>{
+this.apiService.getClassesPlanifiees().subscribe((data:any)=>{
 this.classes=data
 this.classes.forEach(classe => {
   this.addClasseControl(classe);
@@ -71,7 +71,7 @@ planifierCours() {
 const classesSelectionnees = formData.classes
     .map((checked: boolean, index: number) => checked ? this.classes[index].id : null)
     .filter((id: number | null): id is number => id !== null);
-  console.log( classesSelectionnees);
+  // console.log( classesSelectionnees);
 formData.classes=classesSelectionnees
 console.log(formData);
 

@@ -66,5 +66,31 @@ export class ApiService {
   getCoursClasses(): Observable<any[]> {
     return this.http.get<any[]>(`${API_BASE_URL}/cours/classe`);
   }
+
+  getCoursEncour(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE_URL}/encours`);
+  }
+
+  getCoursTerminer(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE_URL}/terminer`);
+  }
+
+  getFiliere(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE_URL}/filiere`);
+  }
+
+
+  getClassesPlanifiees(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE_URL}/planifier`);
+  }
+
+  getClassesNonPlanifiees(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_BASE_URL}/nonplanifier`);
+  }
+
+
+  planifierClasse(data: any): Observable<any> {
+    return this.http.post<any>(`${API_BASE_URL}/classeplanifier`, data);
+  }
   // Répétez ces méthodes pour les salles, les semestres, les cours, etc.
 }

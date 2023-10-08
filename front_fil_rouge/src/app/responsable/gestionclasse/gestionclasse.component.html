@@ -1,0 +1,62 @@
+<div class="flex flex-col justify-between h-screen w-full">
+    <!-- Premier bloc en haut -->
+    <div class="p-4 w-full max-w-4xl bg-gray-100 mb-4">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+                <form  [formGroup]="classeForm" (ngSubmit)="createClasse()">
+                <!-- Autres champs du formulaire ici -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="mb-4">
+                        <label for="module" class="block text-sm font-medium text-gray-600 mb-2">Module</label>
+                        <select id="module" name="module" class="w-full p-2 border border-gray-300 rounded" formControlName="filieres_id">
+                            <option value="">Sélectionnez une filiere</option>
+                            <option *ngFor="let filiere of filieres" [value]="filiere.id">{{ filiere.libelle }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="libelles" class="block text-sm font-medium text-gray-600 mb-2">libelle</label>
+                        <input type="text" id="libell" name="libell" class="w-full p-2 border border-gray-300 rounded" formControlName="libelle">
+                    </div>
+                    <!-- Champs pour le module, le professeur, le semestre, et le nombre d'heures -->
+                    <!-- ... -->
+                </div>
+               
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-green-200">
+                        Soumettre
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Ajoutez ce bouton en haut de votre formulaire -->
+
+    <div class="p-4 w-full max-w-4xl bg-gray-100 mt-[-1rem]">
+
+        <div class="bg-white rounded-lg shadow-lg p-8">
+                   <form [formGroup]="planiclasse" (submit)="planifierClasse()" >
+                <!-- Autres champs du formulaire ici -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <!-- Champs pour le module, le professeur, le semestre, et le nombre d'heures -->
+                    <!-- ... -->
+                </div>
+                <div class="flex flex-wrap mb-4">
+                    <div class="w-full mb-4">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Classes</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <div *ngFor="let control of classeControl; let i = index">
+                                <input type="checkbox" [id]="'classe' + i" [formControl]="control">
+                                <label [for]="'classe' + i" class="text-sm">{{ classes[i].libelle }}</label>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-green-200">
+                        OUVRIR
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

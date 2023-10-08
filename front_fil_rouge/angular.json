@@ -25,8 +25,10 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-thes/indigo-pink.css",
               "node_modules/angular-calendar/css/angular-calendar.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -89,7 +91,10 @@
             ],
             "styles": [
               "node_modules/angular-calendar/css/angular-calendar.css",
-              "src/styles.css"
+              "src/styles.css",
+              "@angular/material/prebuilt-thes/indigo-pink.css",
+              "node_modules/ngx-toastr/toastr.css"
+
             ],
             "scripts": []
           }

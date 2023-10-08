@@ -11,6 +11,18 @@ use Illuminate\Http\Request;
 class CourController extends Controller
 {
     //
+    public function getCoursEnCours()
+    {
+        $coursEnCours = Cours::where('etat', 'En Cours')->get();
+        // dd($coursEnCours);
+        return CourResource::collection($coursEnCours);
+    }
+
+    public function getCoursTermines()
+    {
+        $coursTermines = Cours::where('etat', 'terminé')->get();
+        return CourResource::collection($coursTermines);
+    }
     public function show($id)
 {
     $cours = Cours::findOrFail($id);

@@ -20,6 +20,15 @@ import { RegistreComponent } from './connect/registre/registre.component';
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
 import { PlanifiercourComponent } from './planifiercour/planifiercour.component';
 import { PlanifiersessionComponent } from './responsable/planifiersession/planifiersession.component';
+import { SalleNonDisponibleModal } from './modal-sall/modal-sall.component';
+import { ProfesseurNonDisponibleModal } from './modal-professeur/modal-professeur.component';
+import { SuccesModal } from './modal-succes/modal-succes.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CrudResponsableComponent } from './responsable/crud-responsable/crud-responsable.component';
+import { GestionclasseComponent } from './responsable/gestionclasse/gestionclasse.component';
+import { MaterielModule } from "src/materiele.modal";
+import { HomeComponent } from './home/home.component';
+import { UserlistinigComponent } from './userlistinig/userlistinig.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,9 +38,18 @@ import { PlanifiersessionComponent } from './responsable/planifiersession/planif
     RegistreComponent,
     LiistercourComponent,
     PlanifiercourComponent,
-    PlanifiersessionComponent, // Déclarez ResponsableComponent ici
+    PlanifiersessionComponent,
+    SalleNonDisponibleModal,
+    ProfesseurNonDisponibleModal,
+    SuccesModal,
+    CrudResponsableComponent,
+    GestionclasseComponent,
+    HomeComponent,
+    UserlistinigComponent,
+     // Déclarez ResponsableComponent ici
   ],
   imports: [
+    MatDialogModule,
     BrowserModule,
     ConnectModule,
     AppRoutingModule,
@@ -42,7 +60,9 @@ import { PlanifiersessionComponent } from './responsable/planifiersession/planif
     ModalModule.forRoot(),
     ToastrModule.forRoot(),
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
-    
+    MaterielModule,
+    ToastrModule.forRoot() 
+ 
   ],
   providers: [DatePipe],
     bootstrap: [AppComponent],

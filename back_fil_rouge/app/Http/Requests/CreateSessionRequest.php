@@ -22,7 +22,7 @@ class CreateSessionRequest extends FormRequest
             'heure_debut' => 'required|date_format:H:i:s',
              'heure_fin' => 'required|date_format:H:i:s',
 
-            'salles_id' => 'required_if:mode,en_presentiel|exists:salles,id',
+            'salles_id' => 'nullable|exists:salles,id',
         ];
     }
 }
