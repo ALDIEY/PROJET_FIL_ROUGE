@@ -1,1 +1,25 @@
-<p>registre works!</p>
+<div class="max-w-md mx-auto bg-white p-8 rounded shadow-lg">
+    <h1 class="text-2xl font-bold mb-6">User Register</h1>
+    <form class="space-y-4" [formGroup]="registerform" (ngSubmit)="procedregisteration()">
+      <div>
+        <label for="nom" class="block text-sm font-medium text-gray-600">Nom</label>
+        <input id="nom" name="nom" type="text" class="mt-1 p-2 w-full border rounded-md" formControlName="nom">
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-600">Mot de passe</label>
+        <input id="password" name="password" type="password" class="mt-1 p-2 w-full border rounded-md" formControlName="password">
+      </div>
+      <div>
+        <label for="login" class="block text-sm font-medium text-gray-600">Login</label>
+        <input id="login" name="login" type="text" class="mt-1 p-2 w-full border rounded-md" formControlName="login">
+      </div>
+      <div>
+        <label for="roleId" class="block text-sm font-medium text-gray-600">Role ID</label>
+        <input id="roleId" name="roleId" type="number" class="mt-1 p-2 w-full border rounded-md" formControlName="roleId">
+      </div>
+      <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-green-200">
+        Enregistrer
+      </button>
+    </form>
+  </div>
+  

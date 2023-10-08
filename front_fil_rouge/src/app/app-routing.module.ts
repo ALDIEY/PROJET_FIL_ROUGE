@@ -11,17 +11,18 @@ import { GestionclasseComponent } from './responsable/gestionclasse/gestionclass
 import { HomeComponent } from './home/home.component';
 import { RegistreComponent } from './connect/registre/registre.component';
 import { LoginComponent } from './connect/login/login.component';
+import { UserlistinigComponent } from './userlistinig/userlistinig.component';
 const routes: Routes = [
-  { path: 'responsable', component: ResponsableComponent },
-  { path: 'voirsession', component: AjoutrespoComponent },
-  { path: 'listercour', component: LiistercourComponent },
-  { path: 'planifierCour', component:  PlanifiercourComponent },
-  {path:'planifiersession', component: PlanifiersessionComponent      },
-  {path:'gestionclasse', component: GestionclasseComponent     },
+  // { path: 'responsable', component: ResponsableComponent },
+  // { path: 'voirsession', component: AjoutrespoComponent },
+  // { path: 'listercour', component: LiistercourComponent },
+  // { path: 'planifierCour', component:  PlanifiercourComponent },
+  // {path:'planifiersession', component: PlanifiersessionComponent      },
+  // {path:'gestionclasse', component: GestionclasseComponent     },
   {path:"",component:HomeComponent},
   {path:"register",component:RegistreComponent},
   {path:"logn",component:LoginComponent},
-  {path:"user",component:HomeComponent}
+  {path:"user",component:UserlistinigComponent},
 
   { path: 'connect', loadChildren: () => import('./connect/connect.module').then(m => m.ConnectModule) }
   // { path: 'ajoutrespo', component: AjoutrespoComponent },

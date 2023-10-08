@@ -37,6 +37,7 @@ class UserController extends Controller
                 'nom' => $request->nom,
                 'password' => $request->password,
                 'login' => $request->login,
+                'role_id'=>$request->role_id
             ]);
         });
         return new UserRessource($user);

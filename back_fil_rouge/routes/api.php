@@ -28,20 +28,20 @@ use App\Models\User;
 
 Route::post('login', [AuthController::class, 'login']);
 
-Route::middleware('auth:api')->group(function () {
+// Route::middleware('auth:api')->group(function () {
 
-  Route::get('user', function (Request $request) {
-    return new UserRessource($request->user());
-  });
+//   Route::get('user', function (Request $request) {
+//     return new UserRessource($request->user());
+//   });
 
-  Route::get('users', [UserController::class, 'allUsers']);
+//   Route::get('user', [UserController::class, 'allUsers']);
 
-  Route::post('logout', function (Request $request) {
-    $request->user()->token()->revoke();
-    return response()->json(['message' => 'Logged out'], 200);
-  });
-});
-Route::post('users',[UserController::class,'store']);
+//   Route::post('logout', function (Request $request) {
+//     $request->user()->token()->revoke();
+//     return response()->json(['message' => 'Logged out'], 200);
+//   });
+// });
+Route::post('user',[UserController::class,'store']);
 
 Route::post('/annees',[AnneeController::class,'creeAnnes']);
 Route::get('/annees',[AnneeController::class,'index']);
@@ -86,3 +86,31 @@ Route::get('/modules',[ModuleController::class,'index']);
 
 Route::get('cours/classe',[CourController::class,'getCourclasse']);
 
+
+
+
+Route::middleware(['auth:api', 'role:responsable'])->group(function () {
+  Route::get('user', function (Request $request) {
+    return new UserRessource($request->user());
+  });
+
+  Route::get('users', [UserController::class, 'allUsers']);
+
+  Route::post('logout', function (Request $request) {
+    $request->user()->token()->revoke();
+    return response()->json(['message' => 'Logged out'], 200);
+  });
+});
+  
+
+Route::middleware(['auth:api', 'role:professeur'])->group(function () {
+  
+});
+
+Route::middleware(['auth:api', 'role:attacher'])->group(function () {
+ 
+});
+
+Route::middleware(['auth:api', 'role:etudiant'])->group(function () {
+  
+});

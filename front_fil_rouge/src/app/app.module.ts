@@ -1,6 +1,6 @@
 // app.module.ts
-import { ConnectModule } from "../app/connect/connect.module";
-
+import { ConnectModule } from '../app/connect/connect.module';
+import { MatButtonModule } from '@angular/material/button';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -9,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ResponsableComponent } from './responsable/responsable.component'; // Assurez-vous d'importer ResponsableComponent
-import { AjoutrespoComponent } from "./responsable/ajoutrespo/ajoutrespo.component";
+import { AjoutrespoComponent } from './responsable/ajoutrespo/ajoutrespo.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -26,9 +26,10 @@ import { SuccesModal } from './modal-succes/modal-succes.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CrudResponsableComponent } from './responsable/crud-responsable/crud-responsable.component';
 import { GestionclasseComponent } from './responsable/gestionclasse/gestionclasse.component';
-import { MaterielModule } from "src/materiele.modal";
+import { MaterielModule } from 'src/materiele.modal';
 import { HomeComponent } from './home/home.component';
 import { UserlistinigComponent } from './userlistinig/userlistinig.component';
+import { LoginComponent } from './connect/login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,6 +37,7 @@ import { UserlistinigComponent } from './userlistinig/userlistinig.component';
     ResponsableComponent,
     ModalComponent,
     RegistreComponent,
+    LoginComponent,
     LiistercourComponent,
     PlanifiercourComponent,
     PlanifiersessionComponent,
@@ -46,9 +48,10 @@ import { UserlistinigComponent } from './userlistinig/userlistinig.component';
     GestionclasseComponent,
     HomeComponent,
     UserlistinigComponent,
-     // Déclarez ResponsableComponent ici
+    // Déclarez ResponsableComponent ici
   ],
   imports: [
+    MatButtonModule,
     MatDialogModule,
     BrowserModule,
     ConnectModule,
@@ -59,12 +62,14 @@ import { UserlistinigComponent } from './userlistinig/userlistinig.component';
     ReactiveFormsModule,
     ModalModule.forRoot(),
     ToastrModule.forRoot(),
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
     MaterielModule,
-    ToastrModule.forRoot() 
- 
+    ToastrModule.forRoot(),
   ],
   providers: [DatePipe],
-    bootstrap: [AppComponent],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
