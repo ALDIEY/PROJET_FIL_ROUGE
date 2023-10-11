@@ -1,4 +1,4 @@
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, FormArray, ValidatorFn } from '@angular/forms';
 
 export function dateValidator(control: AbstractControl): { [key: string]: boolean } | null {
   const selectedDate = new Date(control.value);
@@ -18,3 +18,12 @@ export function positiveNumberValidator(control: AbstractControl): { [key: strin
     return null;
   }
   
+  export function atLeastOneCheckboxSelectedValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (control instanceof FormArray) {
+        const isAtLeastOneCheckboxSelected = control.controls.some(ctrl => ctrl.value);
+        return isAtLeastOneCheckboxSelected ? null : { 'nonSelection': true };
+      }
+      return null;
+    };
+  }

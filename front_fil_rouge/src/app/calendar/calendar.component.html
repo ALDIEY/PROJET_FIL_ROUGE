@@ -1,0 +1,18 @@
+<!-- calendar.component.html -->
+<div>
+  <div>
+    <select name="" id="" [(ngModel)]="view" (change)="filtreCalendar()">
+      <option value="Day">Jour</option>
+      <option value="Week">Semaine</option>
+      <option value="Month">Mois</option>
+    </select>
+  </div>
+  
+<full-calendar
+  [options]="calendarOptions"
+  (eventClick)="handleEventClick($event)"
+></full-calendar>
+<!-- app-modal-session -->
+
+
+

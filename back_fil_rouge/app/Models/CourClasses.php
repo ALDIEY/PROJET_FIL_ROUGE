@@ -18,4 +18,5 @@ class CourClasses extends Model
     {
         return $this->belongsTo(Classes::class, 'classes_id');
     }
+   
 }

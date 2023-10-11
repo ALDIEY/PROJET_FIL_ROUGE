@@ -1,0 +1,33 @@
+<app-responsable></app-responsable>
+<app-calendar></app-calendar>
+<!-- <select [(ngModel)]="semaine" (change)="loadSessionsByWeek(semaine)">
+    <option value="1">Semaine 1</option>
+    <option value="2">Semaine 2</option>
+    <!-- Ajoutez d'autres options pour les semaines nécessaires -->
+  <!-- </select> -->
+<table class="min-w-full bg-white border border-gray-300">
+    <thead>
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Heure de début</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Heure de fin</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durée</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mode</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let session of sessions">
+        <td class="px-6 py-4 whitespace-nowrap">{{ getNomJour(session.date) }}, {{ session.date | date: 'dd/MM/yyyy' }}</td>
+      <!-- <td class="px-6 py-4 whitespace-nowrap">{{ session.heure_debut | date: 'HH:mm' }}</td>
+      <td class="px-6 py-4 whitespace-nowrap">{{ session.heure_fin | date: 'HH:mm' }}</td>
+      <td class="px-6 py-4 whitespace-nowrap">{{ session.mode }}</td> -->
+      <td class="px-6 py-4 whitespace-nowrap">{{ session.mode }}</td>
+      <td class="px-6 py-4 whitespace-nowrap">
+        <span *ngIf="session.etat === 'En Attente'" class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full">{{ session.etat }}</span>
+        <span *ngIf="session.etat === 'Terminé'" class="bg-green-200 text-green-800 py-1 px-3 rounded-full">{{ session.etat }}</span>
+        <!-- Ajoutez d'autres conditions pour d'autres états si nécessaire -->
+      </td>
+      </tr>
+    </tbody>
+  </table>
+   -->

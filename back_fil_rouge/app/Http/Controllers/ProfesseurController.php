@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Professeurs;
+use App\Models\Sessions;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ProfesseurController extends Controller
 {
@@ -39,4 +42,25 @@ class ProfesseurController extends Controller
         $this->authorize('create', Professeur::class);
         // Code pour créer un nouveau professeur
     }
+    public function getNombreHeuresCoursProf(Request $request)
+{
+    $user = Auth::user();
+    $professeurId = $user->professeur_id;
+    $mois = Carbon::now()->month;
+
+    // Filtrer par module si le paramètre est présent
+    $module = $request->input('module');
+
+    $query = Sessions::whereHas('courClasse.cours', function ($query) use ($professeurId, $module) {
+        $query->where('professeurs_id', $professeurId);
+        if ($module) {
+            $query->where('module', $module);
+        }
+    })->whereMonth('date', $mois);
+
+    $nombreHeures = $query->sum('duree'); // Supposons que 'duree' est le champ représentant la durée des sessions.
+
+    return response()->json(['nombre_heures' => $nombreHeures]);
+}
+
 }

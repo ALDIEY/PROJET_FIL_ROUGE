@@ -12,14 +12,21 @@ class UserRessource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
-        return [
+        $data = [
             'id' => $this->id,
             'nom' => $this->nom,
-            'password' => $this->password,
             'login' => $this->login,
+            'role' => $this->role->libelle,
         ];
-        
+    
+        // Vérifiez si l'utilisateur est un professeur
+        if ($this->role->libelle === 'professeur') {
+            // Incluez les données spécifiques du professeur
+            $data['professeur'] = new ProfesseurResource($this->professeur);
+        }
+    
+        return $data;
     }
 }

@@ -5,7 +5,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './connect/interseptor';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ResponsableComponent } from './responsable/responsable.component'; // Assurez-vous d'importer ResponsableComponent
@@ -18,18 +20,28 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ModalComponent } from './modal/modal.component';
 import { RegistreComponent } from './connect/registre/registre.component';
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
-import { PlanifiercourComponent } from './planifiercour/planifiercour.component';
+import { PlanifiercourComponent } from './responsable/planifiercour/planifiercour.component';
 import { PlanifiersessionComponent } from './responsable/planifiersession/planifiersession.component';
-import { SalleNonDisponibleModal } from './modal-sall/modal-sall.component';
-import { ProfesseurNonDisponibleModal } from './modal-professeur/modal-professeur.component';
-import { SuccesModal } from './modal-succes/modal-succes.component';
+import { SalleNonDisponibleModal } from './modal/modal-sall/modal-sall.component';
+import { ProfesseurNonDisponibleModal } from './modal/modal-professeur/modal-professeur.component';
+import { SuccesModal } from './modal/modal-succes/modal-succes.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CrudResponsableComponent } from './responsable/crud-responsable/crud-responsable.component';
 import { GestionclasseComponent } from './responsable/gestionclasse/gestionclasse.component';
 import { MaterielModule } from 'src/materiele.modal';
 import { HomeComponent } from './home/home.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
+
 import { UserlistinigComponent } from './userlistinig/userlistinig.component';
 import { LoginComponent } from './connect/login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProfesseurComponent } from './professeur/professeur.component';
+import { CourprofComponent } from './professeur/courprof/courprof.component';
+import { LogoutComponent } from './connect/logout/logout.component';
+import { SessionComponent } from './responsable/session/session.component';
+import { CalendarComponent } from './calendar/calendar.component';
+import { ModalSessionComponent } from './modal/modal-session/modal-session.component';
+import { EtudiantComponent } from './etudiant/etudiant.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,9 +60,18 @@ import { LoginComponent } from './connect/login/login.component';
     GestionclasseComponent,
     HomeComponent,
     UserlistinigComponent,
+    DashboardComponent,
+    ProfesseurComponent,
+    CourprofComponent,
+    LogoutComponent,
+    SessionComponent,
+    CalendarComponent,
+    ModalSessionComponent,
+    EtudiantComponent,
     // Déclarez ResponsableComponent ici
   ],
   imports: [
+    FullCalendarModule,
     MatButtonModule,
     MatDialogModule,
     BrowserModule,
@@ -69,7 +90,11 @@ import { LoginComponent } from './connect/login/login.component';
     MaterielModule,
     ToastrModule.forRoot(),
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,
+  },],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

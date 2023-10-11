@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from "../../service/resposable.service";
 import { Cours } from 'src/app/cours';
+
 @Component({
   selector: 'app-liistercour',
   templateUrl: './liistercour.component.html',
@@ -8,52 +9,40 @@ import { Cours } from 'src/app/cours';
 })
 export class LiistercourComponent implements OnInit  {
   ngOnInit(): void {
-    this.fetchCours()
-    this.filtreCoursencour()
-    this.filtreCoursterminer()
-
+    this.fetchCours();
   }
+filtre:string='';
   coursFiltres: Cours[] = [];
-  filtre: string = 'tous'; 
-  cours:Cours[]=[]
-constructor(private apiService:ApiService){}
-fetchCours() {
-  this.apiService.getCours().subscribe((data:any) => {
-    console.log(data);
-    this.cours=data.data
-    this.appliquerFiltre()
-    
-    // if (Array.isArray(data)) {
-    //   this.cours = data;
-    // } else {
-    //   this.cours = [data]; 
-    //   console.log(this.cours);
-      
-    // }
-  });
-  
-}
-filtreCoursencour(){
-this.apiService.getCoursEncour().subscribe((data:any)=>{
-this.coursFiltres=data.data
-})
+  cours: Cours[] = [];
 
-}
-filtreCoursterminer(){
-  this.apiService.getCoursTerminer().subscribe((data:any)=>{
-  this.coursFiltres=data.data
-  })
-  
+  constructor(private apiService: ApiService) {}
+
+  fetchCours() {
+    this.apiService.getCours().subscribe((data: any) => {
+      this.cours = data.data;
+      this.coursFiltres = this.cours; // Initialise les cours filtrés avec tous les cours
+    });
   }
-appliquerFiltre() {
-  if (this.filtre === 'en_cours') {
-this.filtreCoursencour()
-  } else if (this.filtre === 'termines') {
-   this.filtreCoursterminer()
-  } else {
-    this.coursFiltres = this.cours; // Affiche tous les cours sans filtre
+
+  filtreCoursencour() {
+    this.apiService.getCoursEncour().subscribe((data: any) => {
+      this.coursFiltres = data.data;
+    });
   }
-}
 
+  filtreCoursterminer() {
+    this.apiService.getCoursTerminer().subscribe((data: any) => {
+      this.coursFiltres = data.data;
+    });
+  }
 
+  appliquerFiltre() {
+    if (this.filtre === 'en_cours') {
+      this.filtreCoursencour();
+    } else if (this.filtre === 'termines') {
+      this.filtreCoursterminer();
+    } else {
+      this.coursFiltres = this.cours; // Affiche tous les cours sans filtre
+    }
+  }
 }

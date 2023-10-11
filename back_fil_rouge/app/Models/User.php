@@ -22,6 +22,8 @@ class User extends Authenticatable
         'nom',
         'password',
         'login',
+        'role_id',
+        'etudiant_id'
     ];
 
 
@@ -53,5 +55,26 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    public function professeur()
+    {
+        return $this->belongsTo(Professeurs::class, 'professeur_id');
+    }
 
+    public function etudiant()
+    {
+        return $this->hasOne(Etudiants::class, 'user_id');
+    }
+
+    // Autres relations...
+
+    public function responsable()
+    {
+        return $this->hasOne(Responsables::class, 'user_id');
+    }
+
+    public function attacher()
+    {
+        return $this->hasOne(Attaches::class, 'user_id');
+    }
+    
 }

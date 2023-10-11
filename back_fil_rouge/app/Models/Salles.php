@@ -14,5 +14,9 @@ protected $fillable = [
         'numero',
         'nbr_places',
     ];
+    public function sessions()
+    {
+        return $this->hasMany(Sessions::class, 'salles_id'); // Assurez-vous d'ajuster le nom de la clé étrangère si nécessaire
+    }
 }
 

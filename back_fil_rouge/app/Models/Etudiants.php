@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Etudiants extends Model
 {
     use HasFactory;
-    protected $fillable=['nom','prenom','email'];
-   
+    protected $fillable=['nom','prenom','telephone','email','date_naissance'];
+   public function inscription(){
+return $this->hasMany(Inscriptions::class,'etudiants_id');
+}
 }

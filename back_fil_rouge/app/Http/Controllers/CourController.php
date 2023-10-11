@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CourRequest;
 use App\Http\Resources\CourResource;
 use App\Http\Resources\CoursclasseResource;
 use App\Models\CourClasses;
 use App\Models\Cours;
+use App\Models\Professeurs;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Profiler\Profile;
+use Illuminate\Support\Facades\Auth;
+
 
 class CourController extends Controller
 {
@@ -39,16 +44,9 @@ public function getCourclasse(){
     $cours= Cours::all();
     return CourResource::collection($cours);
     }
-    public function store(Request $request)
+    public function store(CourRequest $request)
     {
-        $request->validate([
-            'modules_id' => 'required|exists:modules,id',
-            'semestres_id' => 'required|exists:semestres,id',
-            'professeurs_id' => 'required|exists:professeurs,id',
-            'nbr_heure' => 'required|integer',
-            'classes' => 'required|array'
-        ]);
-        
+       
 
         $cours = Cours::create([
             'modules_id' => $request->input('modules_id'),
@@ -62,4 +60,12 @@ public function getCourclasse(){
         
         return response()->json(['message' => 'Cours planifié avec succès', 'cours' => $cours], 201);
     }
+    public function getCourprof(){
+        $professeur = Auth::user();
+        $professeurcour=$professeur->professeur_id;
+//    dd($professeurcour);
+   $cour=Cours::where('professeurs_id',$professeurcour)->get();
+return CourResource::collection($cour);
+}
+
 }

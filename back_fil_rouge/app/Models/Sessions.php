@@ -26,4 +26,16 @@ class Sessions extends Model
     {
     return $this->belongsTo(CourClasses::class);
     }
+    public function classe()
+    {
+    return $this->belongsTo(CourClasses::class);
+    }
+    public function salle()
+    {
+        return $this->belongsTo(Salles::class, 'salles_id'); // Assurez-vous d'ajuster le nom de la clé étrangère si nécessaire
+    }
+    public function courClasse()
+    {
+        return $this->belongsTo(CourClasses::class, 'cour_classes_id');
+    }
 }

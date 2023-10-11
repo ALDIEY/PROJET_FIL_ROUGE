@@ -3,9 +3,9 @@ import { ApiService } from "../../service/resposable.service";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { dateValidator, positiveNumberValidator } from "../../validator/sessionvalidator";
 import { MatDialog } from '@angular/material/dialog';
-import { ProfesseurNonDisponibleModal} from '../../modal-professeur/modal-professeur.component';
-import { SalleNonDisponibleModal} from '../../modal-sall/modal-sall.component';
-import { SuccesModal } from "../../modal-succes/modal-succes.component";
+import { ProfesseurNonDisponibleModal} from '../../modal/modal-professeur/modal-professeur.component';
+import { SalleNonDisponibleModal} from '../../modal/modal-sall/modal-sall.component';
+import { SuccesModal } from "../../modal/modal-succes/modal-succes.component";
 
 @Component({
   selector: 'app-planifiersession',

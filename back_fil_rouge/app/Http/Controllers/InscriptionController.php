@@ -2,49 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InscriptionRequest;
+use App\Http\Resources\InscriptionResource;
+// use App\Http\Requests\InscriptionRequest\InscriptionRequest;
+use Illuminate\Support\Facades\Log;
+
+use App\Models\Annees;
+use App\Models\Classes;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 use App\Models\Etudiant;
 use App\Models\Etudiants;
-use App\Models\Inscription;
 use App\Models\Inscriptions;
 use Illuminate\Http\Request;
 
 class InscriptionController extends Controller
 {
-    public function import(Request $request)
-    {
-        $request->validate([
-            'inscriptions' => 'required|array',
-            'inscriptions.*.date' => 'required|date',
-            'inscriptions.*.etudiant.nom' => 'required|string',
-            'inscriptions.*.etudiant.prenom' => 'required|string',
-            'inscriptions.*.etudiant.email' => 'required|email|unique:etudiants,email',
-            'inscriptions.*.classe_id' => 'required|exists:classes,id',
-            'inscriptions.*.annee_id' => 'required|exists:annees,id',
-        ]);
+    public function index(){
+    $etudiant=Inscriptions::all();
+    return InscriptionResource::collection($etudiant);
 
-        $inscriptionsData = $request->input('inscriptions');
+    }
+    public function store(Request $request)
+{
+    // $request->validate([
+    //     'email' => 'required|unique:etudiants|email',
 
-        foreach ($inscriptionsData as $inscriptionData) {
-            $etudiant = Etudiants::create([
-                'nom' => $inscriptionData['etudiant']['nom'],
-                'prenom' => $inscriptionData['etudiant']['prenom'],
-                'email' => $inscriptionData['etudiant']['email'],
-            ]);
+    // ]);
+    $annee = Annees::where('statut', '1')->first();
+    if ($annee) {
+        $idAnnee = $annee->id;
 
-            $inscription = new Inscriptions([
-                'date' => $inscriptionData['date'],
-                'etudiant_id' => $etudiant->id,
-                'classe_id' => $inscriptionData['classe_id'],
-                'annee_id' => $inscriptionData['annee_id'],
-            ]);
+        $etudiants = $request->input('doc'); // Utilisez la méthode input() pour récupérer les données du tableau
+    DB::beginTransaction();
 
-            $inscription->save();
+    try {
+        foreach ($etudiants as $etudiant) {
+            $apprenant = Etudiants::where('telephone', $etudiant['telephone'])->first();
+            // dd($apprenant->id);
+            if ($apprenant == null) {
+               
+//  dd($etudiants);
+                $newApprenant = Etudiants::create([
+                    "nom" => $etudiant['nom'],
+                    "prenom" => $etudiant['prenom'],
+                    "date_naissance" => $etudiant['date_naissance'],
+                    "telephone" => $etudiant['telephone'],
+                    "email" => $etudiant['email'],
+                ]);
+dd($newApprenant->id);
+                User::create([
+                    "etudiant_id" => $newApprenant->id,
+                    "login" => $etudiant['login'],
+                    "role_id" =>3,
+                    "password" => bcrypt($etudiant['password']),
+                ]);
+                // dd($newApprenant);
+
+                $idClasse = Classes::where('libelle', $etudiant['classe'])->first()->id;
+                dd($idClasse);
+                Inscriptions::create([
+                    "classes_id" => $idClasse,
+                    "etudiants_id" => $newApprenant->id,
+                    "annees_id" => $idAnnee,
+                    "date" => Carbon::now()
+                    // "date"=>$date;
+                ]);
+            } else {
+                $idClasse = Classes::where('libelle', $etudiant['classe'])->first()->id;
+                Inscriptions::create([
+                    "classes_id" => $idClasse,
+                    "etudiants_id" => $apprenant->id,
+                    "annees_id" => $idAnnee,
+                    "date" => Carbon::now()
+
+                ]);
+            }
         }
 
-        return response()->json(['message' => 'Inscriptions des étudiants ajoutées avec succès'], 200);
+        DB::commit();
+        return response(['message' => 'Inscription réussie']);
+    } catch (\Exception $e) {
+        DB::rollback();
+        Log::error($e);
+        return response(['message' => $e->getMessage()], 500);
     }
-}
+        // Le reste de votre code ici...
+    } else {
+        // Gérer le cas où aucune année avec le statut 1 n'est trouvée
+        return response(['message' => 'Aucune année avec le statut 1 trouvée.'], 404);
+    }
+        
 
+
+}
+}
 // {
 //     "inscriptions": [
 //         {

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSessionRequest;
+use App\Http\Resources\SessionResource;
 use App\Models\CourClasses;
 use App\Models\Cours;
 use App\Models\Salles;
 use App\Models\Sessions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class SessionController extends Controller
 {
@@ -21,6 +24,7 @@ class SessionController extends Controller
 
     public function index(){
         $session=Sessions::all();
+        return SessionResource::collection($session);
     }
     public function store(CreateSessionRequest $request)
 {
@@ -33,7 +37,9 @@ class SessionController extends Controller
     $coursclasseId = $request->input('cour_classes_id');
     $courClasse = CourClasses::find($coursclasseId);
  $coursId = $courClasse->cours_id;
-    // dd($coursId);
+ $classeId = $courClasse->classes_id;
+
+// dd($classeId);
 
     $mode=$request->input('mode');
     $date = $request->input('date');
@@ -52,9 +58,13 @@ class SessionController extends Controller
     if (!$this->isProfesseurDisponible($coursId, $date, $heureDebut, $heureFin)) {
         return response()->json(['message' => 'Le professeur n\'est pas disponible à ces heures.'], 400);
     }
+    if (!$this->isClasseDisponible($classeId, $date, $heureDebut, $heureFin)) {
+        return response()->json(['message' => 'La classe n\'est pas disponible à ces heures.'], 400);
+    }
     // dd('gsf');
     // // Vérifier la disponibilité de la salle (si la session est en présentiel)
     if ($mode=== 'en_presentiel') {
+        // dd($salleId);
         // Logique pour vérifier la disponibilité de la salle ici
         // Si la salle n'est pas disponible, renvoyer une réponse d'erreur
         if (!$this->isSalleDisponible($salleId, $date, $heureDebut, $heureFin)) {
@@ -102,22 +112,60 @@ class SessionController extends Controller
     } else {
         return response()->json(['message' => 'Le quota horaire du cours est dépassé.'], 422);
     }}
-public function isSalleDisponible($salleId, $date, $heureDebut, $heureFin)
+
+    public function isSalleDisponible($salleId, $date, $heureDebut, $heureFin)
 {
+    // Formatez les heures au format de votre base de données (H:i:s)
+    $heureDebut = Carbon::parse($heureDebut)->format('H:i:s');
+    $heureFin = Carbon::parse($heureFin)->format('H:i:s');
+
+    // Récupérez les sessions existantes pour la salle à la date donnée
     $sessions = Sessions::where('salles_id', $salleId)
         ->where('date', $date)
         ->get();
-// dd($sessions);
+
     foreach ($sessions as $session) {
-        if (($heureDebut >= $session->heure_debut && $heureDebut < $session->heure_fin) ||
-            ($heureFin > $session->heure_debut && $heureFin <= $session->heure_fin) ||
-            ($heureDebut <= $session->heure_debut && $heureFin >= $session->heure_fin)) {
+        $sessionHeureDebut = Carbon::parse($session->heure_debut)->format('H:i:s');
+        $sessionHeureFin = Carbon::parse($session->heure_fin)->format('H:i:s');
+
+        // Vérifiez si les heures se chevauchent
+        if (
+            ($heureDebut >= $sessionHeureDebut && $heureDebut < $sessionHeureFin) ||
+            ($heureFin > $sessionHeureDebut && $heureFin <= $sessionHeureFin) ||
+            ($heureDebut <= $sessionHeureDebut && $heureFin >= $sessionHeureFin)
+        ) {
             return false;
         }
     }
 
     return true;
 }
+    
+public function isClasseDisponible($classeId, $date, $heureDebut, $heureFin)
+{
+    $heureDebut = Carbon::parse($heureDebut)->format('H:i:s');
+    $heureFin = Carbon::parse($heureFin)->format('H:i:s');
+
+    $sessions = Sessions::whereHas('courClasse', function ($query) use ($classeId) {
+        $query->where('classes_id', $classeId);
+    })->where('date', $date)->get();
+// dd($sessions);
+    foreach ($sessions as $session) {
+        $sessionHeureDebut = Carbon::parse($session->heure_debut)->format('H:i:s');
+        $sessionHeureFin = Carbon::parse($session->heure_fin)->format('H:i:s');
+
+        if (
+            ($heureDebut >= $sessionHeureDebut && $heureDebut < $sessionHeureFin) ||
+            ($heureFin > $sessionHeureDebut && $heureFin <= $sessionHeureFin) ||
+            ($heureDebut <= $sessionHeureDebut && $heureFin >= $sessionHeureFin)
+        ) {
+            return false;
+        }
+    }
+
+    return true;
+}   
+    
 public function isProfesseurDisponible($courClassesId, $date, $heureDebut, $heureFin)
 {
     $conflicts = Sessions::join('cour_classes', 'sessions.cour_classes_id', '=', 'cour_classes.id')
@@ -135,10 +183,68 @@ public function isProfesseurDisponible($courClassesId, $date, $heureDebut, $heur
         })
         ->exists();
 
-    // Si des conflits sont trouvés, le professeur n'est pas disponible à ces heures
     return !$conflicts;
 }
+// public function getSessionProf(){
+//     $user=Auth::user();
+//     $professeurcour=$user->professeur_id;
+//     $cours=Cours::where('professeurs_id',$professeurcour)->first();
+// $coursId=$cours->id;
 
+// $courClasse=CourClasses::where('cours_id',$coursId)->first();
+// // dd($courClasse);
+// $courclasseId=$courClasse->id;
+
+// $sessionprof=Sessions::where('cour_classes_id',$courclasseId)->get();
+//     // $coursId=$cours->id;
+// return SessionResource::collection($sessionprof);
+//     // dd($sessionprof);
+//     }
+    public function heureglobal(){
+        
+    }
+    public function getSessionProf(Request $request)
+{
+    $user = Auth::user();
+    $professeurcour = $user->professeur_id;
+    // dd($professeurcour);
+    $cours = Cours::where('professeurs_id', $professeurcour)->first();
+    $coursId = $cours->id;
+
+    $courClasse = CourClasses::where('cours_id', $coursId)->first();
+    $courclasseId = $courClasse->id;
+
+    $sessionsQuery = Sessions::where('cour_classes_id', $courclasseId);
+
+    if ($request->has('jour')) {
+        $jour = $request->input('jour');
+        $sessionsQuery->whereDate('date', '=', $jour);
+    }
+
+    // Filtrer par semaine (du lundi au dimanche)
+    if ($request->has('semaine')) {
+        $semaine = $request->input('semaine');
+        $premierJourSemaine = Carbon::now()->startOfWeek()->addWeeks($semaine)->toDateString();
+        $dernierJourSemaine = Carbon::parse($premierJourSemaine)->endOfWeek()->toDateString();
+        $sessionsQuery->whereBetween('date', [$premierJourSemaine, $dernierJourSemaine]);
+    }
+
+    $sessionprof = $sessionsQuery->get();
+
+    return SessionResource::collection($sessionprof);
+}
+
+// public function getSessionsByWeek($semaine)
+// {
+   
+//     $dateDebut = Carbon::now()->startOfWeek()->addWeeks($semaine - 1)->toDateString();
+//     $dateFin = Carbon::now()->endOfWeek()->addWeeks($semaine - 1)->toDateString();
+
+//     // Récupérez les sessions de la base de données en fonction des dates de début et de fin
+//     $sessions = Sessions::whereBetween('date', [$dateDebut, $dateFin])->get();
+
+//     return SessionResource::collection($sessions);
+// }
 
 }
 

@@ -1,3 +1,5 @@
+<app-responsable></app-responsable>
+
 <div class="flex justify-center items-center h-screen">
     <div class="p-4 w-full max-w-4xl bg-gray-100">
         <div class="bg-white rounded-lg shadow-lg p-8">
@@ -9,6 +11,9 @@
                             <option value="">Sélectionnez un module</option>
                             <option *ngFor="let module of modules" [value]="module.id">{{ module.libelle }}</option>
                         </select>
+                        <div class="texte-erreur" *ngIf="coursForm.get('modules_id')?.hasError('required') && coursForm.get('modules_id')?.touched">
+                            Le module est requis.
+                          </div>
                     </div>
                     <div class="mb-4">
                         <label for="professeur" class="block text-sm font-medium text-gray-600 mb-2">Professeur</label>
@@ -16,6 +21,9 @@
                             <option value="">Sélectionnez un professeur</option>
                             <option *ngFor="let prof of profs" [value]="prof.id">{{ prof.name }}</option>
                         </select>
+                        <div class="texte-erreur" *ngIf="coursForm.get('professeurs_id')?.hasError('required') && coursForm.get('professeurs_id')?.touched">
+                            professeur est requis.
+                          </div>
                     </div>
                     <div class="mb-4">
                         <label for="semestre" class="block text-sm font-medium text-gray-600 mb-2">Semestre</label>
@@ -23,22 +31,36 @@
                             <option value="">Sélectionnez un semestre</option>
                             <option *ngFor="let semestre of semestres" [value]="semestre.id">{{ semestre.libelle }}</option>
                         </select>
+                        <div class="texte-erreur" *ngIf="coursForm.get('semestres_id')?.hasError('required') && coursForm.get('semestres_id')?.touched">
+                            semestre est requis.
+                          </div>
                     </div>
                     <div class="mb-4">
                         <label for="heures" class="block text-sm font-medium text-gray-600 mb-2">Nombre d'heures</label>
-                        <input type="number" id="heures" name="heures" class="w-full p-2 border border-gray-300 rounded" formControlName="nbr_heure">
+                        <input   type="number" id="heures" name="heures" class="w-full p-2 border border-gray-300 rounded" formControlName="nbr_heure">
+                        <div *ngIf="coursForm.get('nbr_heure')?.hasError('min') && coursForm.get('nbr_heure')?.touched"
+                        [ngClass]="{'texte-erreur': coursForm.get('nbr_heure')?.hasError('min')}">
+                     La valeur doit être au moins 1.
+                   </div>
+                   
                     </div>
                 </div>
                 <div class="flex flex-wrap mb-4">
-                    <div class="w-full mb-4">
+                    <div class="texte-erreur" *ngIf="coursForm.get('classes')?.hasError('nonSelection') && coursForm.get('classes')?.touched">
+                        Au moins une classe doit être sélectionnée.
+                      </div>
+                      
+                      
+                      <div class="w-full mb-4">
                         <label class="block text-sm font-medium text-gray-600 mb-2">Classes</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <div *ngFor="let control of classeControl; let i = index">
-                                <input type="checkbox" [id]="'classe' + i" [formControl]="control">
-                                <label [for]="'classe' + i" class="text-sm">{{ classes[i].libelle }}</label>
-                            </div>  
+                          <div *ngFor="let control of classeControl; let i = index">
+                            <input type="checkbox" [id]="'classe' + i" [formControl]="control">
+                            <label [for]="'classe' + i" class="text-sm">{{ classes[i].libelle }}</label>
+                          </div>  
                         </div>
-                    </div>
+                      </div>
+                      
                 </div>
                 <div class="flex justify-end">
                     <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 focus:outline-none focus:border-green-700 focus:ring focus:ring-green-200">

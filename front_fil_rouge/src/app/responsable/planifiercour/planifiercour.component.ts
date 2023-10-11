@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/resposable.service';
-import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, FormControl } from '@angular/forms';@Component({
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, FormControl } from '@angular/forms';
+import { atLeastOneCheckboxSelectedValidator, dateValidator, positiveNumberValidator } from "../../validator/sessionvalidator";
+
+@Component({
   selector: 'app-planifiercour',
   templateUrl: './planifiercour.component.html',
   styleUrls: ['./planifiercour.component.css']
@@ -18,10 +21,11 @@ constructor(private apiService:ApiService,private formBuilder: FormBuilder){
     modules_id: ['', Validators.required], 
     semestres_id: ['', Validators.required], 
     professeurs_id: ['', Validators.required], 
-    nbr_heure: ['', Validators.required], 
-    classes: this.formBuilder.array([]) 
-  });
+    nbr_heure: ['', [Validators.required, Validators.min(1)]], 
+    classes: this.formBuilder.array([], atLeastOneCheckboxSelectedValidator())
+    });
 }
+
 // formData: CoursFormData = {
 //   modules_id: /* Valeur initiale du module */,
 //   semestres_id: /* Valeur initiale du semestre */,
@@ -73,6 +77,7 @@ const classesSelectionnees = formData.classes
     .filter((id: number | null): id is number => id !== null);
   // console.log( classesSelectionnees);
 formData.classes=classesSelectionnees
+formData.nbr_heure=formData.nbr_heure*3600
 console.log(formData);
 
   this.apiService.createCours(formData).subscribe(

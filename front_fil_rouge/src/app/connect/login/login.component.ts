@@ -28,13 +28,23 @@ processLogin() {
   };
 
   this.service.login(credentials).subscribe(response => {
-    console.log('sava');
-    
+    console.log(response);
+
     localStorage.setItem('token', response.token);
-    // Redirection vers la page d'accueil ou autre logique après connexion réussie
+
+    localStorage.setItem('user', JSON.stringify(response.user));
+//     if (response.user.role=='responsable') {
+//   this.router.navigateByUrl("responsable")
+// }
+if (response.user.role=='professeur') {
+  this.router.navigateByUrl("professeur")
+}
+if (response.user.role=='responsable') {
+  this.router.navigateByUrl("voirsession")
+}
   }, error => {
     console.error('Erreur lors de la connexion :', error);
-    // Gérer les erreurs de connexion ici
   });
 }
+
 }
