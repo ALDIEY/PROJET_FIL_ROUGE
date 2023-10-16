@@ -6,7 +6,6 @@ import { ResponsableComponent } from './responsable/responsable.component';
 import { AjoutrespoComponent } from './responsable/ajoutrespo/ajoutrespo.component'; // Assurez-vous d'importer le composant enfant ici
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
 import { PlanifiercourComponent } from "./responsable/planifiercour/planifiercour.component";
-import { PlanifiersessionComponent } from './responsable/planifiersession/planifiersession.component';
 import { GestionclasseComponent } from './responsable/gestionclasse/gestionclasse.component';
 import { HomeComponent } from './home/home.component';
 import { RegistreComponent } from './connect/registre/registre.component';
@@ -16,23 +15,27 @@ import { ProfesseurComponent } from './professeur/professeur.component';
 import { CourprofComponent } from './professeur/courprof/courprof.component';
 import { AuthGuard } from './guard/auth.guard';
 import { LogoutComponent } from './connect/logout/logout.component';
-import { SessionComponent } from './responsable/session/session.component';
+import { SessionComponent } from './attache/session/session.component';
 import { InscriptionComponent } from './responsable/inscription/inscription.component';
+import { HomeprofComponent } from './professeur/homeprof/homeprof.component';
+import { AttacheComponent } from './attache/attache.component';
 const routes: Routes = [
+  { path: 'connect', loadChildren: () => import('./connect/connect.module').then(m => m.ConnectModule) },
+
   //  { path: 'responsable', component: SessionComponent, },
   { path: 'voirsession', component: AjoutrespoComponent , canActivate: [AuthGuard] },
   { path: 'listercour', component: LiistercourComponent , canActivate: [AuthGuard] },
   { path: 'planifierCour', component:  PlanifiercourComponent , canActivate: [AuthGuard]  },
-  {path:'planifiersession', component: PlanifiersessionComponent ,  canActivate: [AuthGuard]  },
-  {path:'gestionclasse', component: GestionclasseComponent   , canActivate: [AuthGuard]  },
+    {path:'gestionclasse', component: GestionclasseComponent   , canActivate: [AuthGuard]  },
   {path:"",component:HomeComponent,canActivate: [AuthGuard]},
-  {path:"register",component:RegistreComponent,canActivate: [AuthGuard] },
-  {path:"login",component:LoginComponent,canActivate: [AuthGuard]},
+  // {path:"register",component:RegistreComponent,canActivate: [AuthGuard] },
+  // {path:"login",component:LoginComponent,canActivate: [AuthGuard]},
   {path:"user",component:UserlistinigComponent , canActivate: [AuthGuard] },
-  {path:"professeur",component:ProfesseurComponent , canActivate: [AuthGuard] },
+  {path:"attache",component:AttacheComponent , canActivate: [AuthGuard] },
+
+  {path:"professeur",component:HomeprofComponent , canActivate: [AuthGuard] },
   {path:"courprof",component:CourprofComponent , canActivate: [AuthGuard] },
-  {path:"etudiant",component:InscriptionComponent,canActivate: [AuthGuard]},
-  { path: 'connect', loadChildren: () => import('./connect/connect.module').then(m => m.ConnectModule) }
+   {path: 'etudiants/:id',component:InscriptionComponent,canActivate: [AuthGuard]},
   // { path: 'ajoutrespo', component: AjoutrespoComponent },
 ]
 

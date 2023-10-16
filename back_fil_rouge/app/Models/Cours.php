@@ -32,4 +32,16 @@ public function semestre()
 {
     return $this->belongsTo(Semestres::class, 'semestres_id');
 }
+// public function courClasses()
+//     {
+//         return $this->belongsToMany(CourClasses::class, 'cour_classes', 'cours_id', 'classes_id');
+//     }
+    public function sessions()
+    {
+        return $this->hasMany(Sessions::class, 'cours_id'); // Assurez-vous d'ajuster le nom de la clé étrangère si nécessaire
+    }
+
+    public function courClasses() {
+        return $this->hasMany(CourClasses::class);
+    }
 }

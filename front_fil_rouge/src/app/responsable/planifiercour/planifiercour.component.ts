@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/service/resposable.service';
 import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { atLeastOneCheckboxSelectedValidator, dateValidator, positiveNumberValidator } from "../../validator/sessionvalidator";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-planifiercour',
@@ -77,13 +78,35 @@ const classesSelectionnees = formData.classes
     .filter((id: number | null): id is number => id !== null);
   // console.log( classesSelectionnees);
 formData.classes=classesSelectionnees
-formData.nbr_heure=formData.nbr_heure*3600
+formData.nbr_heure=formData.nbr_heure+= ':00'
+formData.nbr_heure=formData.nbr_heure+= ':00'
+
 console.log(formData);
 
   this.apiService.createCours(formData).subscribe(
-    (response) => {
-      console.log('Cours planifié avec succès !', response);
+    response=> {
+      console.log(response);
       this.coursForm.reset(); 
+      if (response.message=='Cours planifié avec succès') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Succès!',
+          text: 'cour planifié avec succès.',
+          confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
+          }
+        });
+      }
+      if (response.message=='Un cours avec le même module, professeur, semestre  existe déjà.') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'ce cour existe déja!',
+          // footer: '<a href="">Pourquoi ce problème?</a>'
+        });
+      }
     },
     (error) => {
       console.error('Erreur lors de la planification du cours :', error);

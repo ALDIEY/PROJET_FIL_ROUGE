@@ -18,6 +18,10 @@ class InscriptionResource extends JsonResource
         'id'=>$this->id,
         'nom'=>$this->etudiant->nom,
         'prenom'=>$this->etudiant->prenom,
+        'email'=>$this->etudiant->email,
+        'telephone'=>$this->etudiant->telephone,
+
+
         'classe'=>$this->classe->libelle
 
         ];

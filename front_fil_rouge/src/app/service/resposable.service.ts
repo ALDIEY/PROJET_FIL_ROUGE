@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import {Session  } from "../model/session";
 import { Cours } from '../cours';
 import { Environnement } from '../environnement/environnement';
+import { Data } from '@angular/router';
+import { Etudiant, Root } from '../interface';
 const API_BASE_URL = 'http://127.0.0.1:8000/api'; // Remplacez ceci par l'URL de votre API Laravel
 
 @Injectable({
@@ -53,9 +55,7 @@ export class ApiService {
     return this.http.get<Cours[]>(`${this.apiUrl}/cours`);
   }
 
-  createCours(data: any[]): Observable<any[]> {
-    return this.http.post<any>(`${this.apiUrl}/cours`, data);
-  }
+  
   createSeesion(data: any[]): Observable<any[]> {
     return this.http.post<any>(`${this.apiUrl}/sessions`, data);
   }
@@ -69,7 +69,9 @@ export class ApiService {
   getCoursClasses(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/cours/classe`);
   }
-
+  getClassesByCours(coursId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/cours/${coursId}/classes`);
+  }
   getCoursEncour(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/encours`);
   }
@@ -102,6 +104,22 @@ export class ApiService {
   inscription(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/inscription`, data);
   }
+  getEtudiantsByClasseId(classeId: number): Observable<Etudiant[]> {
+    return this.http.get<Etudiant[]>(`${this.apiUrl}/classes/${classeId}/etudiants`);
+  }
+  getEtudiantCour(classeId:number): Observable<Root> {
+    return this.http.get<Root>(`${this.apiUrl}/etudiants/${classeId}`);
+  }
+
+  annulerSession(sessionId: number): Observable<any> {
+    const url = `${this.apiUrl}/session/${sessionId}/annuler`; 
+    return this.http.delete(url);
+  }
+  createCours(data: any): Observable<any> {
+    const url = `${this.apiUrl}/cours`; 
+    return this.http.post<any>(url, data); 
+  }
+  
   // getSessionsByWeek(semaine: number): Observable<Session[]> {
   //   return this.http.get<Session[]>(`${{this.apiUrl}}/sessions/semaine/${semaine}`)
   //     .pipe(

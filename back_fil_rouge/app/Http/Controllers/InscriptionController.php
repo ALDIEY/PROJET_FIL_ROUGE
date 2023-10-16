@@ -35,7 +35,7 @@ class InscriptionController extends Controller
     if ($annee) {
         $idAnnee = $annee->id;
 
-        $etudiants = $request->input('doc'); // Utilisez la méthode input() pour récupérer les données du tableau
+        $etudiants = $request->input('doc'); 
     DB::beginTransaction();
 
     try {
@@ -45,15 +45,15 @@ class InscriptionController extends Controller
             if ($apprenant == null) {
                
 //  dd($etudiants);
-                $newApprenant = Etudiants::create([
+               $newApprenant = Etudiants::create([
                     "nom" => $etudiant['nom'],
                     "prenom" => $etudiant['prenom'],
                     "date_naissance" => $etudiant['date_naissance'],
                     "telephone" => $etudiant['telephone'],
                     "email" => $etudiant['email'],
                 ]);
-dd($newApprenant->id);
-                User::create([
+// dd($newApprenant->id);
+               $user= User::create([
                     "etudiant_id" => $newApprenant->id,
                     "login" => $etudiant['login'],
                     "role_id" =>3,
@@ -62,8 +62,8 @@ dd($newApprenant->id);
                 // dd($newApprenant);
 
                 $idClasse = Classes::where('libelle', $etudiant['classe'])->first()->id;
-                dd($idClasse);
-                Inscriptions::create([
+                // dd($idClasse);
+               Inscriptions::create([
                     "classes_id" => $idClasse,
                     "etudiants_id" => $newApprenant->id,
                     "annees_id" => $idAnnee,

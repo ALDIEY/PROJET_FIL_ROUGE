@@ -13,4 +13,13 @@ class Classes extends Model
    public function inscription(){
     return $this->hasMany(Inscriptions::class,'classes_id');
     }
+    public function etudiants()
+    {
+        return $this->belongsToMany(Etudiants::class, 'inscriptions', 'classes_id', 'etudiants_id');
+    }
+    
+    public function sessions()
+    {
+        return $this->hasMany(Sessions::class, 'classes_id'); // Assurez-vous d'ajuster le nom de la clé étrangère si nécessaire
+    }
 }

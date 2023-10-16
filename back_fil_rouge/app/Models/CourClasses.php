@@ -18,5 +18,9 @@ class CourClasses extends Model
     {
         return $this->belongsTo(Classes::class, 'classes_id');
     }
+    public function etudiants()
+    {
+        return $this->hasMany(Etudiants::class, 'classes_id', 'id');
+    }
    
 }

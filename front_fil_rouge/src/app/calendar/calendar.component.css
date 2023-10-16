@@ -1,4 +1,24 @@
 .custom-modal-container {
     z-index: 500; 
   }
-  
+  /* Styles pour les sessions annulées */
+.session-annulee {
+  background-color: red;
+  color: white;
+}
+
+/* Style pour les sessions passées */
+.session-passee {
+  background-color: green;
+  color: white;
+}
+
+
+
+.fa-calendar {
+  color: blue; /* Couleur de l'icône pour les sessions en ligne */
+}
+
+.fa-map-marker {
+  color: orange; /* Couleur de l'icône pour les sessions en personne */
+}

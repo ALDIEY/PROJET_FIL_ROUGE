@@ -1,14 +1,36 @@
+<div class="modal-container p-6 rounded-lg shadow-lg relative">
+  <button mat-button class="absolute top-2 left-2 text-red-600 hover:text-red-700" (click)="closeDialog()">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <h2 class="text-2xl font-bold mb-4">Session Details</h2>
+  
+  <p><strong>Mode:</strong> {{ data.session.mode }}</p>
+  <p><strong>Heure:</strong> {{ data.session.heure_debut }} à {{ data.session.heure_fin }}</p>
+  <p><strong>Professeur:</strong> {{ data.session.cours.professeurs }}</p>
+  <p><strong>Classe:</strong> {{ data.session.classe }}</p>
+  <p><strong>Salle:</strong> {{ data.session.salle ? data.session.salle.nom : 'Non assignée' }}</p>
 
-  <div class="modal-container">
+  <!-- Contenu du modal -->
+  <div class="mt-6 space-x-4 w-full flex justify-end">
+    <button mat-button class="bg-red-500 text-white hover:bg-red-600" (click)="closeDialog()">Fermer</button>
     
-      <h2>Session Details</h2>
-      <!-- <p>ID: {{ data.session.id }}</p> -->
-            <p>Mode: {{data.session.mode }}</p>
-            <p>{{data.session.heure_debut}}  à {{data.session.heure_fin}}</p>
-            <p> {{ data.session.salle ? data.session.salle.nom : 'N/A' }}</p>
+    <ng-container *ngIf="!estProfesseurConnecte(); else demandeAnnulationContent">
+      <button mat-button class="bg-blue-500 text-white hover:bg-blue-600" (click)="annulerSession()">Annuler session</button>
+    </ng-container>
 
-    <!-- Contenu du modal -->
-    <button mat-button (click)="closeDialog()">Fermer</button>
+    <ng-template #demandeAnnulationContent>
+      <button mat-button class="text-white hover:bg-green-500" (click)="demanderAnnulation()">Demander l'annulation</button>
+      <!-- Modal de demande d'annulation -->
+      <div *ngIf="showDemandeModal" class="mt-4 w-full">
+        <h2 class="text-xl font-bold">Demande d'Annulation</h2>
+        <div class="form-group" [formGroup]="demandeAnnulationForm">
+          <label for="motif" class="block text-sm font-medium text-gray-600 mb-1">Motif de l'annulation</label>
+          <input type="text" id="motif" formControlName="motif" [(ngModel)]="motif" class="w-full p-2 border border-gray-300 rounded" required>
+        </div>
+        <button type="button" mat-button class="text-white bg-blue-600 mt-2" (click)="demandeannulation()">Envoyer la demande</button>
+      </div>
+    </ng-template>
   </div>
-  
-  
+</div>

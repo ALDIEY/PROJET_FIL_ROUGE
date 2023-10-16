@@ -63,6 +63,7 @@ export class AuthService {
       });
 
       return this.http.post<any>(`${API_BASE_URL}/logout`, {}, { headers: headers });
+      
     } else {
         return new Observable<any>(observer => observer.error('Utilisateur non authentifié'));
     }

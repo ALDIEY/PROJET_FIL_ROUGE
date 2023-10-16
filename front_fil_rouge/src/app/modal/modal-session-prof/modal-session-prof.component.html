@@ -1,0 +1,13 @@
+<div class="modal-container">
+    
+    <h2>Session Details</h2>
+    <!-- <p>ID: {{ data.session.id }}</p> -->
+    
+          <p>Mode: {{data.session.mode }}</p>
+          <p>{{data.session.heure_debut}}  à {{data.session.heure_fin}}</p>
+          <p> {{ data.session.salle ? data.session.salle.nom : 'N/A' }}</p>
+
+  <!-- Contenu du modal -->
+  <button mat-button (click)="closeDialog()">Fermer</button>
+  <button mat-button>demande d'annulation</button>
+</div>

@@ -12,10 +12,13 @@ import { ProfserviceService } from 'src/app/service/profservice.service';
 })
 export class CourprofComponent implements OnInit {
   constructor(private profService:ProfserviceService){}
+  moduleId: number=0;
+  mois: number=0;
+  heuresEffectuees: number=0;
   user: any; 
   cours:Cours[]=[]
   ngOnInit(): void {
-    
+    this.rechercherHeuresEffectuees()
     this.getCourProf()
     const userData = localStorage.getItem('user');
 
@@ -37,6 +40,14 @@ export class CourprofComponent implements OnInit {
   
   })
   
+  }
+  rechercherHeuresEffectuees(): void {
+    this.profService.getHeuresEffectueesParMois()
+      .subscribe(heures => {
+        this.heuresEffectuees = heures;
+        // console.log(this.heuresEffectuees);
+        
+      });
   }
 }
 

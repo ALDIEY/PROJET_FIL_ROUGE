@@ -15,4 +15,10 @@ class Inscriptions extends Model
     public function classe(){
         return $this->belongsTo(Classes::class,'classes_id');
         }
+       
+        public function etudiants()
+        {
+            return $this->hasMany(Etudiant::class);
+        }
+        
 }

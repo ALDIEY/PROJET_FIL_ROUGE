@@ -23,7 +23,13 @@ class CourResource extends JsonResource
             'professeurs' => $this->professeurs->name,
             'semestre' => $this->semestre->libelle,
             'module' => $this->module->libelle,
-            
+            'classes' => $this->classes->map(function($classe) {
+                return [
+                    'id' => $classe->id,
+                    'nom' => $classe->libelle,
+                    'etudiants' => $classe->etudiants, // Chargez les étudiants associés à cette classe
+                ];
+            }),            
         ];
     }
 }

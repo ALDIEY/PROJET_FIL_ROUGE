@@ -29,6 +29,8 @@ class SessionResource extends JsonResource
                 'nom' => $this->salle->nom,
                 // Autres propriétés de la salle que vous voulez inclure
             ] : null,
+            'classe'=>$this->classe->libelle,
+            'cours' => new CourResource($this->cour),             // Ajoutez d'autres champs si nécessaire
         ];
     }
 }

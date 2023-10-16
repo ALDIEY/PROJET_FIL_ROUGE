@@ -44,4 +44,21 @@ export class ProfserviceService {
          return new Observable<any[]>(observer => observer.error('Utilisateur non authentifié'));
     }
   }
+  demandeAnnulation(data:any): Observable<any[]> {
+    // const request = {
+    //   professeurs_id: professorId,
+    //   sessions_id: sessionId,
+    //   motif: motif
+    // };
+    return this.http.post<any>(`${this.apiUrl}/demandes`, data);
+  }
+  getHeuresEffectueesParMois(): Observable<number> {
+    const url = `${this.apiUrl}/sessions/professeur/mois`;
+    return this.http.get<number>(url);
+  }
+  getTotalHeures(month: string, moduleId: number) {
+    const url = `${this.apiUrl}/nbr-heure/module?moduleId=${moduleId}`;
+
+    return this.http.get(url);
+  }
 }

@@ -6,13 +6,15 @@ import {
   HttpEvent,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  constructor(private router:Router){}
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): any{
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -24,6 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
       return next.handle(cloned);
     } else {
+    //  return this.router.navigateByUrl("login")
       return next.handle(request);
     }
   }

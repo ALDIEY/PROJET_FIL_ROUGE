@@ -27,8 +27,8 @@ class CourRequest extends FormRequest
                 'modules_id' => 'required|exists:modules,id',
                 'semestres_id' => 'required|exists:semestres,id',
                 'professeurs_id' => 'required|exists:professeurs,id',
-                'nbr_heure' => 'required|integer',
-                'classes' => 'required|array'
+                'nbr_heure' => 'required|date_format:H:i:s',
+                
             ];
         
     }

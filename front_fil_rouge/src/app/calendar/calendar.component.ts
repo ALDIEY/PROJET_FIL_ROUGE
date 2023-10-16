@@ -6,6 +6,7 @@ import { ModalSessionComponent } from '../modal/modal-session/modal-session.comp
 import { ApiService } from '../service/resposable.service';
 import { Session } from '../cours';
 import { MatDialogConfig } from '@angular/material/dialog';
+import { ProfserviceService } from '../service/profservice.service';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -13,15 +14,18 @@ import { MatDialogConfig } from '@angular/material/dialog';
 })
 export class CalendarComponent implements OnInit {
   sessions:any[]=[]
-  constructor(private apiService:ApiService,private dialog: MatDialog){}
-  view:string='Week';
+  constructor(private profService:ProfserviceService, private apiService:ApiService,private dialog: MatDialog){}
+  view:string='';
   
   calendarOptions: CalendarOptions = {
-    initialView: 'dayGrid'+this.view,
+    initialView: 'dayGrid',
     locale:'fr',
     plugins: [dayGridPlugin],
+    
     events: [],
+    
     eventClick: this.handleEventClick.bind(this)
+    
     // eventContent: (arg, createElement) => {
     //   const container = document.createElement('div');
     //   container.innerText = arg.event.title;
@@ -41,9 +45,32 @@ export class CalendarComponent implements OnInit {
   //   // Utilisez ici votre méthode d'affichage de boîte de dialogue
   // }
   ngOnInit(): void {
-    this.loadSessions()
+    this.calendarOptions = {
+      initialView: 'dayGrid',
+      locale: 'fr',
+      plugins: [dayGridPlugin],
+      events: [],
+      eventClick: this.handleEventClick.bind(this)
+    };
+console.log(this.calendarOptions);
+
     this.filtreCalendar()
-      // this.calendarOptions = {
+
+    const userString = localStorage.getItem('user');
+    if (userString !== null) {
+      const user = JSON.parse(userString);
+      if (user && user.role== 'professeur') {
+this.loadSessionsProf()
+        // Si l'utilisateur est un professeur et que le nom d'utilisateur n'est pas null
+        // Filtrez les sessions pour afficher uniquement celles du professeur actuel
+      }
+      else if (user.role='responsable') {
+        this.loadSessions()
+
+      }
+    }
+    this.filtreCalendar()
+    // this.calendarOptions = {
     //   initialView: 'dayGridMonth',
     //   events: this.sessions.map(session => ({
     //     title: 'Session',  // Titre de l'événement
@@ -58,40 +85,69 @@ export class CalendarComponent implements OnInit {
 
 
 filtreCalendar(): void {
-  this.calendarOptions.initialView = 'dayGrid' + this.view;
+  console.log(this.view);
+  
+  switch (this.view) {
+   
+    case 'day':
+      this.calendarOptions.initialView = 'dayGridDay'; 
+      break;
+    case 'week':
+      this.calendarOptions.initialView = 'dayGridWeek';
+      break;
+    default:
+      this.calendarOptions.initialView = 'dayGridMonth'; 
+      break;
+  }
 }
+
+
+
 
  // Component
 
  loadSessions() {
   this.apiService.getSession().subscribe((data: any) => {
     this.sessions = data.data;
+console.log(this.sessions);
 
     this.calendarOptions.events = this.sessions.map(session => {
       let icon: string;
       let sessionTitle: string;
       let start: string;
       let end: string;
-
+      let className: string;
+    let professeur:string
       if (session.mode === 'en_ligne') {
         icon = 'fa-calendar'; 
         sessionTitle = 'Session en ligne';
-      } else {
+      } else  {
         icon = 'fa-map-marker'; 
-        sessionTitle = 'Session en personne';
+        sessionTitle = 'Session en présentiel';
       }
 
       start = `${session.date}T${session.heure_debut}`;
       end = `${session.date}T${session.heure_fin}`;
 
+      // Déterminez la classe CSS en fonction de l'état de la session
+      if (session.etat === 'annuler') {
+        className = 'session-annulee';
+      } else if (session.etat === 'attente') {
+        className = 'session-passee';
+      } else  {
+        className = 'session-valide'; 
+      }
+
       return {
         id: session.id,
         title: sessionTitle,
         start: start,
+        professeur:session.professeur,
         end: end,
-        // debut:session.heure_debut,
-
-        // this.openSessionDetailsModal(session) // Ouvrir le modal lorsque l'événement est cliqué
+        className: className ,
+        icon:icon,
+        classe:session.classe,
+        professeurs:session.cours.professeurs
       };
     });
 
@@ -102,7 +158,7 @@ filtreCalendar(): void {
 
 handleEventClick(event: any) {
   const sessionId = event.event.id;
-  console.log(sessionId);
+  // console.log(sessionId);
   
   const session = this.sessions.find(s => s.id ==sessionId);
 
@@ -110,21 +166,64 @@ handleEventClick(event: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '300px';
     dialogConfig.data = { session: session,
-      startTime: session.heure_debut, // Passer l'heure de début au modal
-      endTime: session.heure_fin // Passer l'heure de fin au modal
+      startTime: session.heure_debut, 
+      endTime: session.heure_fin 
     };
     dialogConfig.hasBackdrop = false;
-    dialogConfig.panelClass = 'custom-modal-container'; // Ajoutez une classe de conteneur personnalisée
+    dialogConfig.panelClass = 'custom-modal-container'; 
 
     const dialogRef = this.dialog.open(ModalSessionComponent, dialogConfig);
   }
 }
+ 
+loadSessionsProf() {
+  this.profService.getSession().subscribe((data: any) => {
+    this.sessions = data.data;
+console.log(this.sessions);
 
+    this.calendarOptions.events = this.sessions.map(session => {
+      let icon: string;
+      let sessionTitle: string;
+      let start: string;
+      let end: string;
+      let className: string;
+    let professeur:string
+      if (session.mode === 'en_ligne') {
+        icon = 'fa-calendar'; 
+        sessionTitle = 'Session en ligne';
+      } else  {
+        icon = 'fa-map-marker'; 
+        sessionTitle = 'Session en présentiel';
+      }
 
+      start = `${session.date}T${session.heure_debut}`;
+      end = `${session.date}T${session.heure_fin}`;
 
-  
-  
-  
-  
+      // Déterminez la classe CSS en fonction de l'état de la session
+      if (session.etat === 'annuler') {
+        className = 'session-annulee';
+      } else if (session.etat === 'attente') {
+        className = 'session-passee';
+      } else  {
+        className = 'session-valide'; 
+      }
+
+      return {
+        id: session.id,
+        title: sessionTitle,
+        start: start,
+        professeur:session.professeur,
+        end: end,
+        className: className ,
+        icon:icon,
+        classe:session.classe,
+        professeurs:session.cours.professeurs
+      };
+    });
+
+    console.log(this.calendarOptions.events);
+  });
+}
+
   
 }

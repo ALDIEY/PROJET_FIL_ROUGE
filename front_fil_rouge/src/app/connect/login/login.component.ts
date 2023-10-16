@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/service/auth.service';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {FormsModule} from '@angular/forms';
+ 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -19,6 +23,7 @@ export class LoginComponent {
 
 )}
 ngOnInit(): void {
+  
 }
 
 processLogin() {
@@ -29,17 +34,27 @@ processLogin() {
 
   this.service.login(credentials).subscribe(response => {
     console.log(response);
-
+    this.userdata=response
+if (this.userdata.login==this.loginForm.value.login) {
+ 
+}
+else{
+this.toastr.error('invalide')
+}
     localStorage.setItem('token', response.token);
 
     localStorage.setItem('user', JSON.stringify(response.user));
 //     if (response.user.role=='responsable') {
 //   this.router.navigateByUrl("responsable")
+
 // }
 if (response.user.role=='professeur') {
   this.router.navigateByUrl("professeur")
 }
 if (response.user.role=='responsable') {
+  this.router.navigateByUrl("voirsession")
+}
+if (response.user.role=='attache') {
   this.router.navigateByUrl("voirsession")
 }
   }, error => {

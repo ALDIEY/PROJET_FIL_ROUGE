@@ -17,25 +17,31 @@ class Sessions extends Model
         'heure_fin',
         'duree',
         'etat',
-        'cour_classes_id',
+        'classes_id',
+        'cours_id',
+
         'attaches_id',
         'responsables_id',
         'salles_id',
     ];
     public function cours()
     {
-    return $this->belongsTo(CourClasses::class);
+    return $this->belongsTo(CourClasses::class,'cours_id');
     }
     public function classe()
     {
-    return $this->belongsTo(CourClasses::class);
+    return $this->belongsTo(Classes::class,'classes_id');
     }
     public function salle()
     {
         return $this->belongsTo(Salles::class, 'salles_id'); // Assurez-vous d'ajuster le nom de la clé étrangère si nécessaire
     }
-    public function courClasse()
+    public function cour()
     {
-        return $this->belongsTo(CourClasses::class, 'cour_classes_id');
+        return $this->belongsTo(Cours::class, 'cours_id');
+    }
+    public function demande()
+    {
+        return $this->hasOne(Demandes::class, 'sessions_id');
     }
 }

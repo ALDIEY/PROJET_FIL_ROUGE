@@ -4,3 +4,35 @@
 @import 'tailwindcss/utilities';
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import "~bootstrap/dist/css/bootstrap.css";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.custom-modal-container {
+    z-index: 500; 
+  }
+  /* Styles pour les sessions annulées */
+.session-annulee {
+  background-color: rgb(173, 15, 15);
+  color: white;
+}
+
+/* Style pour les sessions passées */
+.session-passee {
+  background-color: goldenrod;
+  color: white;
+}
+
+.session-valide {
+    background-color: rgb(44, 218, 32);
+    color: white;
+  }
+  
+
+.fa-calendar {
+  color: blue; /* Couleur de l'icône pour les sessions en ligne */
+}
+
+.fa-map-marker {
+  color: orange; /* Couleur de l'icône pour les sessions en personne */
+}

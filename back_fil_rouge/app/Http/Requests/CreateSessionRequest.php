@@ -15,7 +15,7 @@ class CreateSessionRequest extends FormRequest
     {
         return [
             'etat' => 'nullable|in:attente,confirmer',
-            'cour_classes_id' => 'required|exists:cour_classes,id',
+            'cours_id' => 'required|exists:cours,id',
             'attache_id' => 'nullable|exists:attaches,id',
             'responsables_id' => 'nullable|exists:responsables,id',
             'date' => 'required|date',
@@ -23,6 +23,8 @@ class CreateSessionRequest extends FormRequest
              'heure_fin' => 'required|date_format:H:i:s',
 
             'salles_id' => 'nullable|exists:salles,id',
+            'classes_id' => 'required|exists:cours,id',
+
         ];
     }
 }
