@@ -39,18 +39,19 @@ class SessionController extends Controller
         $heureFin = Carbon::createFromFormat('H:i:s', $request->input('heure_fin'));
     // ;
         // Vérifier la disponibilité du professeur, de la classe et de la salle
-        if (!$this->isProfesseurDisponible($coursId, $date, $heureDebut, $heureFin)) {
-            return response()->json(['message' => 'Le professeur n\'est pas disponible à ces heures.'], 400);
-        }
-        if (!$this->isClasseDisponible($classeId, $date, $heureDebut, $heureFin)) {
-            return response()->json(['message' => 'La classe n\'est pas disponible à ces heures.'], 400);
-        }
-    
         if ($mode === 'en_presentiel') {
             if (!$this->isSalleDisponible($salleId, $date, $heureDebut, $heureFin)) {
-                return response()->json(['message' => 'La salle n\'est pas disponible à ces heures.'], 400);
+                return response()->json(['message' => 'La salle est indisponible à ces heures.']);
             }
         }
+        if (!$this->isProfesseurDisponible($coursId, $date, $heureDebut, $heureFin)) {
+            return response()->json(['message' => 'Le professeur est indisponible à ces heures.']);
+        }
+        if (!$this->isClasseDisponible($classeId, $date, $heureDebut, $heureFin)) {
+            return response()->json(['message' => 'La classe n\'est pas disponible à ces heures.']);
+        }
+    
+       
 
         // Calculer la durée de la session en minutes
         $dureeEnMinutes = $heureFin->diffInMinutes($heureDebut);
@@ -229,6 +230,9 @@ public function annulerSession($sessionId)
         if ($session->etat == 'annuler') {
             return response()->json(['message' => 'Session déjà annulée']);
         }
+        if ($session->etat == 'valider') {
+            return response()->json(['message' => 'Session déjà valider']);
+        }
 
         $session->etat = 'annuler';
         $session->save();
@@ -239,7 +243,28 @@ public function annulerSession($sessionId)
         return response()->json(['error' => 'Erreur lors de l\'annulation de la session'], 500);
     }
 }
+public function validerSession($sessionId)
+{
+    try {
+        if (!is_numeric($sessionId)) {
+            return response()->json(['error' => 'ID de session invalide'], 400);
+        }
 
+        $session = Sessions::findOrFail($sessionId);
+
+        if ($session->etat == 'valider'|| $session->etat=='annuler') {
+            return response()->json(['message' => 'Session déjà valider ou annuler']);
+        }
+
+        $session->etat = 'valider';
+        $session->save();
+
+        return response()->json(['message' => 'Session vamider avec succès']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['error' => 'Erreur lors de la validation de la session'], 500);
+    }
+}
 
 // public function getSessionsByWeek($semaine)
 // {

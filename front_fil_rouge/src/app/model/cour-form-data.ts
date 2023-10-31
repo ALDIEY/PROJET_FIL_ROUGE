@@ -10,7 +10,7 @@ export class CoursFormData {
         this.semestres_id = 0; 
         this.professeurs_id = 0; 
         this.nbr_heure = 0; 
-        this.classes = []; // Vous pouvez également initialiser classes avec des valeurs par défaut si nécessaire
+        this.classes = []; 
     }
 }
 

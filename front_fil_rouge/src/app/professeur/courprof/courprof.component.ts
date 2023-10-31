@@ -3,6 +3,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import { Cours } from 'src/app/cours';
 import { ProfserviceService } from 'src/app/service/profservice.service';
+import { ApiService } from 'src/app/service/resposable.service';
 
 @Component({
   selector: 'app-courprof',
@@ -11,13 +12,18 @@ import { ProfserviceService } from 'src/app/service/profservice.service';
  
 })
 export class CourprofComponent implements OnInit {
-  constructor(private profService:ProfserviceService){}
+  constructor(private profService:ProfserviceService,private apiService:ApiService){}
+  aucunCoursTrouve: boolean = false;
   moduleId: number=0;
+  modules:any[]=[]
   mois: number=0;
   heuresEffectuees: number=0;
+  coursFiltres:any[]=[]
   user: any; 
   cours:Cours[]=[]
   ngOnInit(): void {
+    this.getModule()
+
     this.rechercherHeuresEffectuees()
     this.getCourProf()
     const userData = localStorage.getItem('user');
@@ -35,6 +41,7 @@ export class CourprofComponent implements OnInit {
   getCourProf(){
   this.profService.getCoursDuProfesseur().subscribe((response:any)=>{
   this.cours=response.data
+  this.coursFiltres = this.cours;
   console.log(this.cours);
   
   
@@ -49,6 +56,27 @@ export class CourprofComponent implements OnInit {
         
       });
   }
+  appliquerFiltreModule() {
+    if (this.moduleId !== null) {
+      this.coursFiltres = this.cours.filter(c => c.modules_id === this.moduleId);
+      console.log(this.coursFiltres);
+
+    } else {
+      this.coursFiltres = this.cours;
+      // console.log(this.cours);
+
+    }
+  }
+  getModule(){
+    this.apiService.getModules().subscribe((data:any)=>{
+    this.modules=data
+    this.modules.unshift({ id: null, libelle: 'Tous les modules' });
+    console.log(this.modules);
+    
+    
+    })
+    
+    }
 }
 
 

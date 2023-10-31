@@ -23,6 +23,7 @@ class SessionResource extends JsonResource
             'duree' => $this->duree,
             'etat' => $this->etat,
             'attache_id' => $this->attache_id,
+            // 'etudiant'=>$this->etutiant_id,
             'responsables_id' => $this->responsables_id,
             'salle' => $this->salle ? [
                 'id' => $this->salle->id,

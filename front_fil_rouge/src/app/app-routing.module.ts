@@ -14,11 +14,12 @@ import { UserlistinigComponent } from './userlistinig/userlistinig.component';
 import { ProfesseurComponent } from './professeur/professeur.component';
 import { CourprofComponent } from './professeur/courprof/courprof.component';
 import { AuthGuard } from './guard/auth.guard';
-import { LogoutComponent } from './connect/logout/logout.component';
 import { SessionComponent } from './attache/session/session.component';
 import { InscriptionComponent } from './responsable/inscription/inscription.component';
 import { HomeprofComponent } from './professeur/homeprof/homeprof.component';
 import { AttacheComponent } from './attache/attache.component';
+import { DemandeComponent } from './attache/demande/demande.component';
+import { CrudResponsableComponent } from './responsable/crud-responsable/crud-responsable.component';
 const routes: Routes = [
   { path: 'connect', loadChildren: () => import('./connect/connect.module').then(m => m.ConnectModule) },
 
@@ -31,12 +32,14 @@ const routes: Routes = [
   // {path:"register",component:RegistreComponent,canActivate: [AuthGuard] },
   // {path:"login",component:LoginComponent,canActivate: [AuthGuard]},
   {path:"user",component:UserlistinigComponent , canActivate: [AuthGuard] },
-  {path:"attache",component:AttacheComponent , canActivate: [AuthGuard] },
+  {path:"attache",component:SessionComponent , canActivate: [AuthGuard] },
+  {path:"demande",component:DemandeComponent , canActivate: [AuthGuard] },
+  {path:"crud-respo",component:CrudResponsableComponent , canActivate: [AuthGuard] },
 
   {path:"professeur",component:HomeprofComponent , canActivate: [AuthGuard] },
   {path:"courprof",component:CourprofComponent , canActivate: [AuthGuard] },
    {path: 'etudiants/:id',component:InscriptionComponent,canActivate: [AuthGuard]},
-  // { path: 'ajoutrespo', component: AjoutrespoComponent },
+  { path: 'sessionattache', component: SessionComponent ,canActivate: [AuthGuard]},
 ]
 
 @NgModule({

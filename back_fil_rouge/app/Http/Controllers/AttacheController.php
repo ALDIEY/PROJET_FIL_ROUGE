@@ -13,6 +13,7 @@ class AttacheController extends Controller
     public function getDemandesEnAttente()
 {
     $demandes = Demandes::where('etat_demande', 'attente')
+    
         ->join('sessions', 'demandes.sessions_id', '=', 'sessions.id')
         ->where('sessions.etat', 'attente')
         ->select('demandes.*')

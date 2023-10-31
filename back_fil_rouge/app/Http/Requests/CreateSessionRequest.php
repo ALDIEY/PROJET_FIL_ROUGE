@@ -23,7 +23,7 @@ class CreateSessionRequest extends FormRequest
              'heure_fin' => 'required|date_format:H:i:s',
 
             'salles_id' => 'nullable|exists:salles,id',
-            'classes_id' => 'required|exists:cours,id',
+            'classes_id' => 'required|exists:classes,id',
 
         ];
     }

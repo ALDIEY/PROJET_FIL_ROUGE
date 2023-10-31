@@ -8,6 +8,7 @@ use App\Http\Resources\CoursclasseResource;
 use App\Models\CourClasses;
 use App\Models\Cours;
 use App\Models\Inscriptions;
+use App\Models\Modules;
 use App\Models\Professeurs;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Profiler\Profile;
@@ -85,6 +86,15 @@ public function getCourclasse(){
 return CourResource::collection($cour);
 }
  
+public function getCourprofbyModule($moduleId){
+    // $responsable = Auth::user();
+    // $responsablecour = $responsable->responsables_id;
+
+    $cours = Cours::where('modules_id', $moduleId) 
+                  ->get();
+// dd()
+    return CourResource::collection($cours);
+}
 
 public function getClassesByCours($id)
     {
@@ -101,5 +111,6 @@ public function getClassesByCours($id)
 
         return response()->json($classes);
     }
+
  
 }

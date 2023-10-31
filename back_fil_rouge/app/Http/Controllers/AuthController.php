@@ -11,6 +11,7 @@ class AuthController extends Controller
 {
     public function login(Request $request)
 {
+    error_log('Données reçues du client : ' . json_encode($request->all()));
     $credentials = $request->validate([
         'login' => ['required'],
         'password' => ['required'],
@@ -47,4 +48,14 @@ class AuthController extends Controller
 //         ], 200)->withCookie($cookie);
 
 //     }
+public function logout()
+{
+    if (Auth::check()) {
+        Auth::user()->tokens->each(function ($token) {
+            $token->delete();
+        });
+    }
+
+    return response()->json(['message' => 'Déconnexion réussie']);
+}
 }

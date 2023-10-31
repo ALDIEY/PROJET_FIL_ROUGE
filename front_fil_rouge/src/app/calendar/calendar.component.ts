@@ -7,6 +7,7 @@ import { ApiService } from '../service/resposable.service';
 import { Session } from '../cours';
 import { MatDialogConfig } from '@angular/material/dialog';
 import { ProfserviceService } from '../service/profservice.service';
+import { CalendarView } from 'angular-calendar';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -15,8 +16,8 @@ import { ProfserviceService } from '../service/profservice.service';
 export class CalendarComponent implements OnInit {
   sessions:any[]=[]
   constructor(private profService:ProfserviceService, private apiService:ApiService,private dialog: MatDialog){}
-  view:string='';
-  
+  view: string = 'month';
+  // vieww:CalendarView.Month 
   calendarOptions: CalendarOptions = {
     initialView: 'dayGrid',
     locale:'fr',
@@ -45,61 +46,40 @@ export class CalendarComponent implements OnInit {
   //   // Utilisez ici votre méthode d'affichage de boîte de dialogue
   // }
   ngOnInit(): void {
-    this.calendarOptions = {
-      initialView: 'dayGrid',
-      locale: 'fr',
-      plugins: [dayGridPlugin],
-      events: [],
-      eventClick: this.handleEventClick.bind(this)
-    };
-console.log(this.calendarOptions);
-
-    this.filtreCalendar()
-
+    // this.view = 'month'; // Initialisez la vue à 'month' par défaut
+    this.filtreCalendar();
     const userString = localStorage.getItem('user');
     if (userString !== null) {
       const user = JSON.parse(userString);
-      if (user && user.role== 'professeur') {
-this.loadSessionsProf()
-        // Si l'utilisateur est un professeur et que le nom d'utilisateur n'est pas null
-        // Filtrez les sessions pour afficher uniquement celles du professeur actuel
-      }
-      else if (user.role='responsable') {
-        this.loadSessions()
-
+      if (user && user.role === 'professeur') {
+        this.loadSessionsProf();
+      } else if (user.role === 'responsable') {
+        this.loadSessions();
       }
     }
-    this.filtreCalendar()
-    // this.calendarOptions = {
-    //   initialView: 'dayGridMonth',
-    //   events: this.sessions.map(session => ({
-    //     title: 'Session',  // Titre de l'événement
-    //     start: session.date,  // Date de début de l'événement (à ajuster selon votre structure de données)
-    //     end: session.date,    // Date de fin de l'événement (à ajuster selon votre structure de données)
-    //     // Autres propriétés d'événement que vous voulez afficher dans le calendrier
-    //   }))
-    // };
   }
+  
   
 // Service
 
 
 filtreCalendar(): void {
-  console.log(this.view);
-  
   switch (this.view) {
-   
     case 'day':
-      this.calendarOptions.initialView = 'dayGridDay'; 
+      this.calendarOptions.initialView = 'dayGridDay';
       break;
     case 'week':
       this.calendarOptions.initialView = 'dayGridWeek';
       break;
+    case 'month':
+      this.calendarOptions.initialView = 'dayGridMonth';
+      break;
     default:
-      this.calendarOptions.initialView = 'dayGridMonth'; 
+      this.calendarOptions.initialView = 'dayGridMonth';
       break;
   }
 }
+
 
 
 
@@ -150,7 +130,7 @@ console.log(this.sessions);
         professeurs:session.cours.professeurs
       };
     });
-
+    this.filtreCalendar(); // Appel de la fonction de filtrage ici
     console.log(this.calendarOptions.events);
   });
 }
@@ -220,7 +200,7 @@ console.log(this.sessions);
         professeurs:session.cours.professeurs
       };
     });
-
+    this.filtreCalendar(); // Appel de la fonction de filtrage ici
     console.log(this.calendarOptions.events);
   });
 }

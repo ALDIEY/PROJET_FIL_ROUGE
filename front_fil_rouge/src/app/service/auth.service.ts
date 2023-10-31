@@ -3,16 +3,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { Environnement } from "../environnement/environnement";
- const API_BASE_URL = 'http://127.0.0.1:8000/api'; // Remplacez ceci par l'URL de votre API Laravel
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient ) { }
-  apiurl='http://127.0.0.1:8000/user';
+  constructor(private http: HttpClient,private router:Router ) { }
   apiUrl: string = Environnement.apiUrl;
+  apiurl=`${this.apiUrl}`+'/user';
+
 
   getAll(){
   return this.http.get(this.apiurl)
@@ -54,19 +55,10 @@ export class AuthService {
   setUser(user: any) {
     this.userSubject.next(user);
   }
-  logout(): Observable<any> {
-    const token = localStorage.getItem('token');
+  logout(): void {
+    localStorage.removeItem('token');
 
-    if (token) {
-      const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`
-      });
-
-      return this.http.post<any>(`${API_BASE_URL}/logout`, {}, { headers: headers });
-      
-    } else {
-        return new Observable<any>(observer => observer.error('Utilisateur non authentifié'));
-    }
+    this.router.navigate(['/login']);
   }
   private estConnecte = false;
 

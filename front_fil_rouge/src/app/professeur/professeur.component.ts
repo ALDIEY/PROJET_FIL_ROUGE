@@ -48,22 +48,25 @@ constructor(private profService:ProfserviceService, private authService:AuthServ
   })
   
   }
-  logout(): void {
-    this.authService.logout().subscribe(
-      (res:any) => {
-        console.log(res);
-        localStorage.clear()
-        console.log('deconnxion effectuer')
-        this.router.navigateByUrl("login")
-
-        // La déconnexion a réussi
-        // Vous pouvez effectuer des actions après la déconnexion, par exemple rediriger l'utilisateur vers la page de connexion
-      },
-      error => {
-        // La déconnexion a échoué, gérez l'erreur ici
-      }
-    );
+  deconnexion(): void {
+    this.authService.logout();
   }
+  // logout(): void {
+  //   this.authService.logout().subscribe(
+  //     (res:any) => {
+  //       console.log(res);
+  //       localStorage.clear()
+  //       console.log('deconnxion effectuer')
+  //       this.router.navigateByUrl("login")
+
+  //       // La déconnexion a réussi
+  //       // Vous pouvez effectuer des actions après la déconnexion, par exemple rediriger l'utilisateur vers la page de connexion
+  //     },
+  //     error => {
+  //       // La déconnexion a échoué, gérez l'erreur ici
+  //     }
+  //   );
+  // }
   loadSessions() {
     this.profService.getSession().subscribe((data: any) => {
       this.sessions = data.data;

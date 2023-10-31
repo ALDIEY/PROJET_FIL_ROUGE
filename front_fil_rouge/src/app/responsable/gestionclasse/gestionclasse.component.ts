@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/service/resposable.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-gestionclasse',
@@ -63,7 +64,18 @@ export class GestionclasseComponent implements OnInit {
     console.log(planiForm);
     this.apiService.planifierClasse(planiForm).subscribe((response) => {
       console.log('Cours planifié avec succès');
-      this.resetClasseControl(); // Réinitialisation des cases à cocher après la soumission
+      this.resetClasseControl(); 
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès!',
+        text: 'cour planifié avec succès.',
+        confirmButtonText: 'OK'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
+        }
+      });
+      // window.re
     });
   }
 

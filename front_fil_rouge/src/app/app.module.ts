@@ -21,8 +21,6 @@ import { ModalComponent } from './modal/modal.component';
 import { RegistreComponent } from './connect/registre/registre.component';
 import { LiistercourComponent } from './responsable/liistercour/liistercour.component';
 import { PlanifiercourComponent } from './responsable/planifiercour/planifiercour.component';
-import { SalleNonDisponibleModal } from './modal/modal-sall/modal-sall.component';
-import { ProfesseurNonDisponibleModal } from './modal/modal-professeur/modal-professeur.component';
 import { SuccesModal } from './modal/modal-succes/modal-succes.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CrudResponsableComponent } from './responsable/crud-responsable/crud-responsable.component';
@@ -30,13 +28,12 @@ import { GestionclasseComponent } from './responsable/gestionclasse/gestionclass
 import { MaterielModule } from 'src/materiele.modal';
 import { HomeComponent } from './home/home.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
-
+import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 import { UserlistinigComponent } from './userlistinig/userlistinig.component';
 import { LoginComponent } from './connect/login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfesseurComponent } from './professeur/professeur.component';
 import { CourprofComponent } from './professeur/courprof/courprof.component';
-import { LogoutComponent } from './connect/logout/logout.component';
 import { SessionComponent } from './attache/session/session.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { ModalSessionComponent } from './modal/modal-session/modal-session.component';
@@ -51,6 +48,12 @@ import { SimplePaginatorDirective } from './paginate.directive';
 import { HomeprofComponent } from './professeur/homeprof/homeprof.component';
 import { AttacheComponent } from './attache/attache.component';
 import { SessionAttacheComponent } from './session-attache/session-attache.component';
+import { DemandeComponent } from './attache/demande/demande.component';
+import { DialogContentComponent } from './responsable/crud-responsable/ajoutannee/ajoutannee.component';
+import { AjoutprofComponent } from './responsable/crud-responsable/ajoutprof/ajoutprof.component';
+import { AjoutsalleComponent } from './responsable/crud-responsable/ajoutsalle/ajoutsalle.component';
+import { AjoutmoduleComponent } from './responsable/crud-responsable/ajoutmodule/ajoutmodule.component';
+import { AjoutsemestreComponent } from './responsable/crud-responsable/ajoutsemestre/ajoutsemestre.component';
 
 const routes: Routes = [
   
@@ -71,8 +74,7 @@ const routes: Routes = [
     LoginComponent,
     LiistercourComponent,
     PlanifiercourComponent,
-    SalleNonDisponibleModal,
-    ProfesseurNonDisponibleModal,
+   
     SuccesModal,
     CrudResponsableComponent,
     GestionclasseComponent,
@@ -81,7 +83,6 @@ const routes: Routes = [
     DashboardComponent,
     ProfesseurComponent,
     CourprofComponent,
-    LogoutComponent,
     SessionComponent,
     CalendarComponent,
     ModalSessionComponent,
@@ -91,7 +92,13 @@ const routes: Routes = [
     SimplePaginatorDirective,
     HomeprofComponent,
     AttacheComponent,
-    SessionAttacheComponent    // Déclarez ResponsableComponent ici
+    SessionAttacheComponent,
+    DemandeComponent,
+    DialogContentComponent,
+    AjoutprofComponent,
+    AjoutsalleComponent,
+    AjoutmoduleComponent,
+    AjoutsemestreComponent    // Déclarez ResponsableComponent ici
   ],
   imports: [
     FullCalendarModule,
@@ -113,7 +120,8 @@ const routes: Routes = [
     }),
     MaterielModule,
     ToastrModule.forRoot(),
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgxPaginationModule
   ],
   providers: [DatePipe,{
     provide: HTTP_INTERCEPTORS,

@@ -21,7 +21,7 @@ class ModuleController extends Controller
             'libelle' => $request->input('libelle'),
 
         ]);
-        return response()->json(['message' => 'module créée avec succès', 'classe' => $module], 201);
+        return response()->json(['message' => 'module créée avec succès', 'module' => $module], 201);
 
     }
 }

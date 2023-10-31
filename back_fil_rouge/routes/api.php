@@ -16,6 +16,8 @@ use App\Http\Controllers\SalleController;
 use App\Http\Controllers\SemestreController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
+use App\Models\Attache;
+use App\Models\Professeurs;
 use App\Models\Sessions;
 use App\Models\User;
 
@@ -57,27 +59,29 @@ Route::post('user',[UserController::class,'store']);
 
 
 
-
-
+Route::post('/logout', [AuthController::class, 'logout']);
 
 
 
 Route::get('/sessions', [SessionController::class, 'index']);
-Route::delete('/session/{sessionId}/annuler', [SessionController::class, 'annulerSession']);
 Route::middleware(['auth:api', 'role:responsable'])->group(function () {
   Route::get('user', function (Request $request) {
     return new UserRessource($request->user());
   });
+  Route::get('/getCourprofbymodule/{moduleId}', [CourController::class,'getCourprofbyModule']);
+  Route::post('/professeurs', [ProfesseurController::class, 'store']);
 
   Route::get('users', [UserController::class, 'allUsers']);
 
-  Route::post('logout', function (Request $request) {
-    $request->user()->token()->revoke();
-    return response()->json(['message' => 'Logged out'], 200);
-  });
+  // Route::post('logout', function (Request $request) {
+  //   $request->user()->token()->revoke();
+  //   return response()->json(['message' => 'Logged out'], 200);
+  // });
 
   Route::get('/encours',[CourController::class,'getCoursNonTermines']);
   Route::get('/terminer',[CourController::class,'getCoursTermines']);
+  Route::post('/modules',[ModuleController::class,'store']);
+
   
   Route::post('/classes', [ClasseController::class, 'store']);
   Route::get('/classes', [ClasseController::class, 'index']);
@@ -93,7 +97,6 @@ Route::post('/inscription',[InscriptionController::class,'store']);
 Route::get('/etudiant',[InscriptionController::class,'index']);
 
 
-Route::post('/professeurs', [ProfesseurController::class, 'store']);
 Route::get('/professeurs', [ProfesseurController::class, 'index']);
 
 Route::post('/salles', [SalleController::class, 'store']);
@@ -103,7 +106,6 @@ Route::post('/semestres', [SemestreController::class, 'store']);
 Route::get('/semestres', [SemestreController::class, 'index']);
 
   
-Route::get('/modules',[ModuleController::class,'index']);
 Route::get('cours/classe',[CourController::class,'getCourclasse']);
 Route::get('courprof',[CourController::class,'getCourprof']);
 Route::get('/classes/{classeId}/etudiants', [EtudiantController::class, 'getEtudiantsByClasse']);
@@ -116,6 +118,7 @@ Route::post('/cours', [CourController::class, 'store']);
 });
 Route::get('cours/{id}/classes', [CourController::class,'getClassesByCours']);
  
+Route::get('/modules',[ModuleController::class,'index']);
 
 
 Route::middleware(['auth:api', 'role:professeur'])->group(function () {
@@ -126,10 +129,10 @@ Route::middleware(['auth:api', 'role:professeur'])->group(function () {
   Route::get('users', [UserController::class, 'allUsers']);
   Route::get('sessionprof',[SessionController::class,'getSessionProf']);
 
-  Route::post('logout', function (Request $request) {
-    $request->user()->token()->revoke();
-    return response()->json(['message' => 'Logged out'], 200);
-  });
+  // Route::post('logout', function (Request $request) {
+  //   $request->user()->token()->revoke();
+  //   return response()->json(['message' => 'Logged out'], 200);
+  // });
   Route::get('courprof',[CourController::class,'getCourprof']);
   Route::post('/demandes', [ProfesseurController::class,'demandeAnnulation']);
   Route::get('/sessions/professeur/mois',[ProfesseurController::class,'NbrHeure']);
@@ -137,12 +140,24 @@ Route::middleware(['auth:api', 'role:professeur'])->group(function () {
 });
 Route::get('demandes',[AttacheController::class,'getDemandesEnAttente']);
 Route::middleware(['auth:api', 'role:attacher'])->group(function () {
- 
+  Route::delete('/session/{sessionId}/annuler', [SessionController::class, 'annulerSession']);
+
+Route::get('/demandes/{id}/valider',[ProfesseurController::class,'demandeValider']);
+Route::get('/demandes/{id}/annuler',[ProfesseurController::class,'demandeAnnuler']);
+Route::get('/session/{id}/annuler',[SessionController::class,'annulerSession']);
+Route::get('/session/{id}/valider',[SessionController::class,'validerSession']);
+
+
 });
 
 Route::middleware(['auth:api', 'role:etudiant'])->group(function () {
-  
+
 });
+Route::get('etudiant/sessions/{user_id}',[EtudiantController::class,'getSessionsEtudiant']);
+Route::get('etudiant/cours/{user_id}',[EtudiantController::class,'getCourEtudiant']);
 
 
-Route::get('/session/{id}/annuler',[SessionController::class,'annulerSession']);
+
+
+
+

@@ -26,7 +26,10 @@ class UserRessource extends JsonResource
             // Incluez les données spécifiques du professeur
             $data['professeur'] = new ProfesseurResource($this->professeur);
         }
-    
+    if ($this->role->libelle === 'etudiant') {
+        $data['etudiant'] = new EtudiantResource($this->etudiante);
+
+    }
         return $data;
     }
 }

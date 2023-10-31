@@ -14,6 +14,7 @@
 
   <!-- Contenu du modal -->
   <div class="mt-6 space-x-4 w-full flex justify-end">
+    
     <button mat-button class="bg-red-500 text-white hover:bg-red-600" (click)="closeDialog()">Fermer</button>
     
     <ng-container *ngIf="!estProfesseurConnecte(); else demandeAnnulationContent">
@@ -23,13 +24,13 @@
     <ng-template #demandeAnnulationContent>
       <button mat-button class="text-white hover:bg-green-500" (click)="demanderAnnulation()">Demander l'annulation</button>
       <!-- Modal de demande d'annulation -->
-      <div *ngIf="showDemandeModal" class="mt-4 w-full">
+      <div *ngIf="showDemandeModal" class="mt-4 w-ful flex demandee">
         <h2 class="text-xl font-bold">Demande d'Annulation</h2>
         <div class="form-group" [formGroup]="demandeAnnulationForm">
           <label for="motif" class="block text-sm font-medium text-gray-600 mb-1">Motif de l'annulation</label>
           <input type="text" id="motif" formControlName="motif" [(ngModel)]="motif" class="w-full p-2 border border-gray-300 rounded" required>
         </div>
-        <button type="button" mat-button class="text-white bg-blue-600 mt-2" (click)="demandeannulation()">Envoyer la demande</button>
+        <button type="button" mat-button class="text-white bg-blue-600 mt-2 demande" (click)="demandeannulation()">Envoyer la demande</button>
       </div>
     </ng-template>
   </div>

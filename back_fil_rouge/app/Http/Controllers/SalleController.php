@@ -17,14 +17,14 @@ public function index(){
 
         $request->validate([
             'nom' => 'required|string|max:255',
-            'numero' => 'required|integer',
+            // 'numero' => 'required|integer',
             'nbr_places' => 'required|integer',
         ]);
 
         // Création de la nouvelle salle
         $salle = Salles::create([
             'nom' => $request->input('nom'),
-            'numero' => $request->input('numero'),
+            // 'numero' => $request->input('numero'),
             'nbr_places' => $request->input('nbr_places'),
         ]);
 

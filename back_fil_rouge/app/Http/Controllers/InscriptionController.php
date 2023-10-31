@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InscriptionRequest;
 use App\Http\Resources\InscriptionResource;
+use App\Mail\EtudiantMail;
 // use App\Http\Requests\InscriptionRequest\InscriptionRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -17,6 +18,7 @@ use App\Models\Etudiant;
 use App\Models\Etudiants;
 use App\Models\Inscriptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class InscriptionController extends Controller
 {
@@ -70,6 +72,7 @@ class InscriptionController extends Controller
                     "date" => Carbon::now()
                     // "date"=>$date;
                 ]);
+                 Mail::to($newApprenant->email)->send(new EtudiantMail($newApprenant->prenom));
             } else {
                 $idClasse = Classes::where('libelle', $etudiant['classe'])->first()->id;
                 Inscriptions::create([

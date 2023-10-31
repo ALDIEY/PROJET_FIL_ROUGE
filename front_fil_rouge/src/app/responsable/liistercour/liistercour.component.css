@@ -49,3 +49,11 @@
   
   color: red;
   }
+  .color-bg{
+  background-color: rgb(83, 200, 83);
+  color: white;
+  
+  }
+  .filter-container {
+    display: flex;
+}

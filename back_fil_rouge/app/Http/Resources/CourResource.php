@@ -27,7 +27,7 @@ class CourResource extends JsonResource
                 return [
                     'id' => $classe->id,
                     'nom' => $classe->libelle,
-                    'etudiants' => $classe->etudiants, // Chargez les étudiants associés à cette classe
+                    'etudiants' => $classe->etudiants, 
                 ];
             }),            
         ];

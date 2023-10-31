@@ -5,12 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { PlanifiercourComponent } from '../planifiercour/planifiercour.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ProfesseurNonDisponibleModal } from '../../modal/modal-professeur/modal-professeur.component';
-import { SalleNonDisponibleModal } from '../../modal/modal-sall/modal-sall.component';
 import { SuccesModal } from '../../modal/modal-succes/modal-succes.component';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import Swal from 'sweetalert2';
+import { ProfserviceService } from 'src/app/service/profservice.service';
 
 @Component({
   selector: 'app-liistercour',
@@ -19,15 +18,24 @@ import Swal from 'sweetalert2';
 })
 export class LiistercourComponent implements OnInit {
   courId: number = 0;
+  p: number = 1;
+  aucunCoursTrouve: boolean = false;
+  moduleId: number=0;
+  modules:any[]=[]
   modalRef?: BsModalRef;
   sessionForm: FormGroup;
   salles: any[] = [];
   classes: any[] = [];
   pageSize: number = 10;
   openErreurModal: boolean = false;
+ 
   ngOnInit(): void {
     this.getSalles();
-    this.fetchCours();
+    // this. appliquerFiltreModule();
+    this.getModule()
+    this.getCours();
+
+    
     // this.getCourClasse(this.courId)
   }
   filtre: string = '';
@@ -35,6 +43,7 @@ export class LiistercourComponent implements OnInit {
   cours: Cours[] = [];
   constructor(
     private apiService: ApiService,
+    private profService:ProfserviceService,
     private fb: FormBuilder,
     public dialog: MatDialog,
     private modalService: BsModalService,
@@ -47,7 +56,7 @@ export class LiistercourComponent implements OnInit {
       heure_fin: ['', [Validators.required, this.validateHeure('00')]],
    
       mode: ['', Validators.required],
-      salles_id: [''], // Champ de sélection de la salle
+      salles_id: [''], 
       cours_id: ['', Validators.required],
       classes_id: ['', Validators.required],
     });
@@ -60,12 +69,12 @@ export class LiistercourComponent implements OnInit {
       return null;
     };
   }
-  fetchCours() {
-    this.apiService.getCours().subscribe((data: any) => {
-      this.cours = data.data;
-      this.coursFiltres = this.cours; // Initialise les cours filtrés avec tous les cours
-    });
-  }
+  // fetchCours() {
+  //   this.apiService.getCours().subscribe((data: any) => {
+  //     this.cours = data.data;
+  //     this.coursFiltres = this.cours; // Initialise les cours filtrés avec tous les cours
+  //   });
+  // }
 
   filtreCoursencour() {
     this.apiService.getCoursEncour().subscribe((data: any) => {
@@ -92,7 +101,7 @@ export class LiistercourComponent implements OnInit {
     } else if (this.filtre === 'termines') {
       this.filtreCoursterminer();
     } else {
-      this.coursFiltres = this.cours; // Affiche tous les cours sans filtre
+      this.coursFiltres = this.cours; 
     }
   }
   //   ouvrirModal(coursId: number) {
@@ -161,82 +170,77 @@ export class LiistercourComponent implements OnInit {
   }
   planifierSession() {
     if (this.sessionForm.invalid) {
-      console.log('Le formulaire est invalide.');
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Le formulaire est invalide.',
-      });
+      this.afficherErreur('Le formulaire est invalide.');
+      this.sessionForm.reset();
+
       return;
     }
-
+  
     const formData = this.sessionForm.value;
     formData.salles_id = +formData.salles_id;
-const dateSession = new Date(formData.date);
-const dateActuelle = new Date();
+  
+    const dateSession = new Date(formData.date);
+    const dateActuelle = new Date();
+  
+    if (dateSession < dateActuelle) {
+      this.afficherErreur('La date de la session ne peut pas être antérieure à la date actuelle.');
+      return;
+    }
+  
+    const heureDebut = new Date(`2000-01-01 ${formData.heure_debut}:00`);
+    const heureFin = new Date(`2000-01-01 ${formData.heure_fin}:00`);
+    if (heureDebut.getHours() < 8) {
+      this.afficherErreur('L\'heure de début ne peut pas être antérieure à 8h00.');
+      return;
+    }
+    if (heureFin.getHours() > 18 || (heureFin.getHours() === 18 && heureFin.getMinutes() > 0)) {
+      this.afficherErreur('L\'heure de fin ne peut pas être postérieure à 18h00.');
+      return;
+    }
+  
+  
+    if (heureDebut >= heureFin) {
+      this.afficherErreur('L\'heure de début doit être antérieure à l\'heure de fin.');
+      return;
+    }
+    const differenceHeures = heureFin.getHours() - heureDebut.getHours();
 
-if (dateSession < dateActuelle) {
-  console.log('La date de la session ne peut pas être antérieure à la date actuelle.');
-  Swal.fire({
-    icon: 'error',
-    title: 'Oops...',
-    text: 'La date de la session ne peut pas être antérieure à la date actuelle.',
-  });
-  return;
-}
-const heureDebut = new Date(`2000-01-01 ${formData.heure_debut}:00`);
-const heureFin = new Date(`2000-01-01 ${formData.heure_fin}:00`);
-
-if (heureDebut >= heureFin) {
-  // console.log('L\'heure de début doit être antérieure à l\'heure de fin.');
-  Swal.fire({
-    icon: 'error',
-    title: 'Oops...',
-    text: 'L\'heure de début doit être antérieure à l\'heure de fin.',
-  });
-  return;
-}
-
+    if (differenceHeures > 4) {
+      this.afficherErreur('La différence entre l\'heure de début et l\'heure de fin ne peut pas dépasser 4 heures.');
+      return;
+    }
+  
     if (formData.mode === 'en_ligne') {
       formData.salles_id = null;
     }
     formData.heure_debut = formData.heure_debut += ':00';
     formData.heure_fin = formData.heure_fin += ':00';
     formData.classes_id = +formData.classes_id;
-
-    console.log(formData);
-    // Ensuite, soumettez les données à votre service/API
+  
     this.apiService.createSeesion(formData).subscribe(
       (response: any) => {
         console.log('Réponse du serveur :', response);
-if (response.message=='Le quota horaire du cours est dépassé.') {
-  Swal.fire({
-    icon: 'error',
-    title: 'Oops...',
-    text: 'Le quota horaire du cours est épuiser!',
-    // footer: '<a href="">Pourquoi ce problème?</a>'
-  });
-}
-        if (
-          response.message ===
-          "Le professeur n'est pas disponible à ces heures."
-        ) {
-          this.openProfesseurNonDisponibleModal();
-        } else if (
-          response.message === "La classe n'est pas disponible à ces heures."
-
-        ) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Le quota horaire du cours est épuiser!',
-            // footer: '<a href="">Pourquoi ce problème?</a>'
-          });
-          this.openSalleNonDisponibleModal();
+        if (response.message === 'Le quota horaire du cours est dépassé.') {
+          this.afficherErreur('Le quota horaire du cours est épuisé!');
+          this.sessionForm.controls['heure_debut'].setValue('');
+          this.sessionForm.controls['heure_fin'].setValue('');
+        } else if (response.message === "Le professeur est indisponible à ces heures.") {
+          // this.openProfesseurNonDisponibleModal();
+          this.afficherErreur('Le professeur n\'est pas disponible à ces heures.');
+          this.sessionForm.controls['heure_debut'].setValue('');
+          this.sessionForm.controls['heure_fin'].setValue('');
+        }
+        else if (response.message === "La salle est indisponible à ces heures.") {
+          // this.openProfesseurNonDisponibleModal();
+          this.afficherErreur('La salle n\'est pas disponible à ces heures.');
+          this.sessionForm.controls['heure_debut'].setValue('');
+          this.sessionForm.controls['heure_fin'].setValue('');
+        } else if (response.message === "La classe n'est pas disponible à ces heures.") {
+          this.afficherErreur('La classe n\'est pas disponible à ces heures.');
+          this.sessionForm.controls['heure_debut'].setValue('');
+          this.sessionForm.controls['heure_fin'].setValue('');
         } else if (response.message === 'Session créée avec succès') {
           this.openSuccesModal();
-          // console.log('sava');
-
           this.sessionForm.reset();
         } else {
           this.openErreurModalFunction();
@@ -245,16 +249,21 @@ if (response.message=='Le quota horaire du cours est dépassé.') {
       (error) => {
         console.error('Erreur lors de la planification de la session :', error);
         this.openErreurModalFunction();
+        this.sessionForm.controls['heure_debut'].setValue('');
+        this.sessionForm.controls['heure_fin'].setValue('');
       }
     );
   }
-  openProfesseurNonDisponibleModal(): void {
-    this.dialog.open(ProfesseurNonDisponibleModal);
+  
+  afficherErreur(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: message,
+    });
   }
-
-  openSalleNonDisponibleModal(): void {
-    this.dialog.open(SalleNonDisponibleModal);
-  }
+  
+  
 
   openSuccesModal(): void {
     this.dialog.open(SuccesModal);
@@ -273,4 +282,48 @@ if (response.message=='Le quota horaire du cours est dépassé.') {
     // Naviguer vers la page des étudiants avec l'ID du cours en tant que paramètre d'URL
     this.router.navigate(['/etudiants', courId]);
   }
+  
+  getModule(){
+  this.apiService.getModules().subscribe((data:any)=>{
+  this.modules=data
+  this.modules.unshift({ id: null, libelle: 'Tous les modules' });
+  console.log(this.modules);
+  
+  
+  })
+  
+  }
+  // appliquerFiltreModule(moduleId: number|null): void {
+  //   if (moduleId === 0 || moduleId === null) {
+  //     // Si l'ID du module est 0, récupérez tous les cours
+  //     this.apiService.getCours().subscribe((data: any) => {
+  //       this.cours = data.data;
+  //  this.coursFiltres = this.cours;
+  //     });
+  //   } else {
+  //     this.apiService.getCoursParModule(moduleId).subscribe((data: any) => {
+  //       this.cours = data.data;
+  //       this.aucunCoursTrouve = this.cours.length === 0; // Vérifiez s'il y a des cours trouvés
+  //  this.coursFiltres = this.cours;
+  //  console.log(this.coursFiltres);
+   
+  //     });
+  //   }
+  // }
+  getCours() {
+    this.apiService.getCours().subscribe((data: any) => {
+      this.cours = data.data; // Stockez les cours récupérés dans la variable cours
+      this.coursFiltres = this.cours; // Initialisez les cours filtrés avec tous les cours au chargement initial
+    });
+  }
+
+  appliquerFiltreModule() {
+    if (this.moduleId !== null) {
+      this.coursFiltres = this.cours.filter(c => c.modules_id === this.moduleId);
+    } else {
+      this.coursFiltres = this.cours;
+    }
+  }
+  
+  
 }

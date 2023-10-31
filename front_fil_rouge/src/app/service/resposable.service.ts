@@ -48,7 +48,7 @@ export class ApiService {
     return this.http.get<any[]>(`${this.apiUrl}/semestres`);
   }
 
-  createSemestres(data: any): Observable<any> {
+  createSemestre(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/semestres`, data);
   }
   getCours(): Observable<Cours[]> {
@@ -59,7 +59,10 @@ export class ApiService {
   createSeesion(data: any[]): Observable<any[]> {
     return this.http.post<any>(`${this.apiUrl}/sessions`, data);
   }
-  createAnnee(data: any): Observable<any> {
+  createModule(data: any[]): Observable<any[]> {
+    return this.http.post<any>(`${this.apiUrl}/modules`, data);
+  }
+  createAnnee(data:string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/annees`, data);
   }
   getSessionsByDate(date: string): Observable<Session[]> {
@@ -115,11 +118,12 @@ export class ApiService {
     const url = `${this.apiUrl}/session/${sessionId}/annuler`; 
     return this.http.delete(url);
   }
+  
   createCours(data: any): Observable<any> {
     const url = `${this.apiUrl}/cours`; 
     return this.http.post<any>(url, data); 
   }
-  
+ 
   // getSessionsByWeek(semaine: number): Observable<Session[]> {
   //   return this.http.get<Session[]>(`${{this.apiUrl}}/sessions/semaine/${semaine}`)
   //     .pipe(

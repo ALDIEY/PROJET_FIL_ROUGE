@@ -12,5 +12,10 @@ class Professeurs extends Model
         'name',
         'grade',
         'specialite',
+        'email'
     ];
+    public function cours(){
+    
+    return $this->hasMany(Cours::class);
+    }
 }

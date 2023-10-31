@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DemandeRequest;
+use App\Http\Requests\ProfesseurRequest;
+use App\Http\Resources\CourResource;
 use App\Models\Cours;
 use App\Models\Demandes;
 use App\Models\Professeurs;
 use App\Models\Sessions;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
+
 
 class ProfesseurController extends Controller
 {
@@ -17,22 +23,38 @@ class ProfesseurController extends Controller
     public function index() {
         return Professeurs::all();
     }
-    public function store(Request $request)
+    public function store(ProfesseurRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'grade' => 'required|string|max:255',
-            'specialite' => 'required|string|max:255',
-        ]);
-
-        // Création du nouveau professeur
-        $professeur = Professeurs::create([
-            'name' => $request->input('name'),
-            'grade' => $request->input('grade'),
-            'specialite' => $request->input('specialite'),
-        ]);
-
-        return response()->json(['message' => 'Professeur ajouté avec succès', 'professeur' => $professeur], 201);
+        try {
+            
+    
+            // Création du professeur
+            $professeur = Professeurs::create([
+                'name' => $request->input('name'),
+                'grade' => $request->input('grade'),
+                'email' => $request->input('email'),
+                'specialite' => $request->input('specialite'),
+            ]);
+    
+            // Création de l'utilisateur
+            $user = User::create([
+                'password' => bcrypt($request->input('password')),
+                'login' => $request->input('login'),
+                'roles_id' => 2
+            ]);
+    
+            // Associer le professeur à l'utilisateur
+            // $professeur->user_id = $user->id;
+            // $professeur->save();
+    
+            return response()->json(['message' => 'Professeur ajouté avec succès', 'professeur' => $professeur]);
+        } catch (QueryException $e) {
+            // Une exception de requête s'est produite (par exemple, violation de la contrainte d'unicité)
+            return response()->json(['error' => 'Erreur de base de données: ' . $e->getMessage()], 500);
+        } catch (\Exception $e) {
+            // Une autre exception s'est produite
+            return response()->json(['error' => 'Une erreur est survenue: ' . $e->getMessage()], 500);
+        }
     }
     public function viewProfesseurData(Professeurs $professeur)
     {
@@ -66,28 +88,42 @@ class ProfesseurController extends Controller
     return response()->json(['nombre_heures' => $nombreHeures]);
 }
 
-public function demandeAnnulation(DemandeRequest $request){
+public function demandeAnnulation(DemandeRequest $request)
+{
     $user = Auth::user();
     $professeurId = $user->professeur_id;
     $sessionsId = $request->input('sessions_id');
 
     $session = Sessions::find($sessionsId);
-    if (!$session || $session->etat === 'annuler' ) {
-        return response()->json(['message'=>'Cette session est déjà annulée.']);
-    }
-    if (!$session || $session->etat === 'valider' ) {
-        return response()->json(['message'=>'Cette session est déjà valider.']);
+    $existingDemande = Demandes::where('professeurs_id', $professeurId)
+    ->where('sessions_id', $sessionsId)
+    ->first();
+
+if ($existingDemande) {
+return response()->json(['message' => 'Une demande d\'annulation pour cette session a déjà été soumise.']);
+}
+
+    // Vérifier si la session existe et si elle n'est ni annulée ni validée
+    if (!$session || $session->etat === 'annuler' || $session->etat === 'valider') {
+        return response()->json(['message' => 'Cette session est déjà annulée ou validée.']);
     }
 
+    $now = now(); 
+    if ($session->date < $now) {
+        return response()->json(['message' => 'Cette session a déjà eu lieu.']);
+    }
+   
+    // Créer la demande d'annulation
     Demandes::create([
         'professeurs_id' => $professeurId,
         'sessions_id' => $sessionsId,
         'motif' => $request->input('motif'),
-        'etat_demande' => 'attente', 
+        'etat_demande' => 'attente',
     ]);
 
     return response()->json(['message' => 'Demande annulation soumise avec succès']);
 }
+
 
 public function NbrHeure() {
     $user = Auth::user();
@@ -147,6 +183,70 @@ public function NbrHeureModule(Request $request) {
     
     return response()->json(['totalHeures' => $totalHeures]);
 }
+
+ public function demandeAnnuler($demandeId){
+
+    try {
+        if (!is_numeric($demandeId)) {
+            return response()->json(['error' => 'ID de demande invalide'], 400);
+        }
+
+        $session = Demandes::findOrFail($demandeId);
+
+        if ($session->etat == 'valider') {
+            return response()->json(['message' => 'Demande déjà valider']);
+        }
+
+        $session->etat = 'annuler';
+        $session->save();
+
+        return response()->json(['message' => 'Demande annuler avec succès']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['error' => 'Erreur lors de l\'annulation de la demande'], 500);
+    }
+}
+public function demandeValider($demandeId)
+{
+    try {
+        if (!is_numeric($demandeId)) {
+            return response()->json(['error' => 'ID de demande invalide'], 400);
+        }
+
+        $demande = Demandes::findOrFail($demandeId);
+
+        if ($demande->etat == 'valider') {
+            return response()->json(['message' => 'demande déjà validée']);
+        }
+
+        $session = Sessions::find($demande->sessions_id);
+        if ($session) {
+            $session->etat = 'annuler';
+            $session->save();
+        } else {
+            return response()->json(['error' => 'Session non trouvée'], 404);
+        }
+
+        $demande->etat = 'valider';
+        $demande->save();
+
+        return response()->json(['message' => 'Demande validée avec succès']);
+    } catch (\Exception $e) {
+        Log::error($e);
+        return response()->json(['error' => 'Erreur lors de la validation de la demande'], 500);
+    }
+}
+public function getCourprofbyModule($moduleId){
+     $professeur = Auth::user();
+     $professeurcour = $professeur->professeur_id;
+
+    $cours = Cours::where('professeurs_id',$professeurcour)
+            ->where('modules_id', $moduleId) 
+                  ->get();
+// dd()
+    return CourResource::collection($cours);
+}
+
 }
 
 

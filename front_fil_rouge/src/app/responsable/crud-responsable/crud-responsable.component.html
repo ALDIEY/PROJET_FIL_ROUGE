@@ -8,42 +8,27 @@
         <div class="max-w-md w-full mx-auto">
             <div class=" p-3 rounded-lg shadow-md">
                 <!-- Votre formulaire ici -->
-                <div class="max-w-md w-full mx-auto">
-                    <div class=" p-3 rounded-lg shadow-md" *ngIf="showModal">
-                        <form (submit)="ajouterAnnee(nouvelleAnnee)">
-                            <div class="mb-4">
-                                <label for="annee" class="block text-sm font-medium text-gray-600">Année </label>
-                                <input placeholder="format XXXX-YYYY" type="text" id="annee" name="annee" [(ngModel)]="nouvelleAnnee" class="mt-1 p-2 w-full border rounded-md" required>
-                            </div>
-                            
-                            <div class="flex justify-end">
-                                <button type="button" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800" (click)="closeModal()">Annuler</button>
-                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 ml-2" >Ajouter</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+               
                 
-                <button type="button" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4" (click)="openModal()">
-                    ajouter annee
-                </button>
+                <!-- <div class="max-w-md w-full mx-auto">
+                    <div class=" p-3 rounded-lg shadow-md">
+                        <button type="button" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4" (click)="ouvrirModalAjoutAnnee()">
+                            Ajouter année
+                        </button>
+                    </div>
+                </div> -->
+
+                  
                 
             </div>
         </div>
 
-        <div class="max-w-md w-full mx-auto">
-            <div class=" p-2 rounded-lg shadow-md">
-                
-                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">
-                    ajouter classe
-                </button>
-            </div>
-        </div>
+       
         <div class="max-w-md w-full mx-auto">
             <div class=" p-2 rounded-lg shadow-md">
                 <!-- Votre formulaire ici -->
                 
-                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">
+                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4"(click)="ouvrirModalAjoutProfd()">
                     ajouter professeur
                 </button>
             </div>
@@ -52,7 +37,7 @@
             <div class=" p-2 rounded-lg shadow-md">
                 <!-- Votre formulaire ici -->
                 
-                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">
+                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4" (click)="ouvrirModalAjoutSalle()">
                     ajouter salle
                 </button>
             </div>
@@ -61,7 +46,7 @@
             <div class=" p-2 rounded-lg shadow-md">
                 <!-- Votre formulaire ici -->
                 
-                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">
+                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4" (click)="ouvrirModalAjoutModule()">
                     ajouter module
                 </button>
             </div>
@@ -70,7 +55,7 @@
             <div class=" p-2 rounded-lg shadow-md">
                 <!-- Votre formulaire ici -->
                 
-                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4">
+                <button type="submit" class="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mt-4" (click)="ouvrirModalAjoutSemestre()">
                     cree semestre
                 </button>
             </div>
@@ -81,7 +66,7 @@
     <!-- Colonne Droite (Deuxième Partie) -->
     <div class="w-1/2 bg-gray-200 p-8">
         <!-- Contenu pour la deuxième partie -->
-        <h2 class="text-2xl font-semibold mb-4">visualiser les sessions</h2>
+        <h2 class="text-2xl font-semibold mb-4">visualiser les donnes</h2>
         <!-- calendar.component.html -->
 
 <!-- <mwl-calendar-month-view
@@ -96,3 +81,4 @@
         <!-- Ajoutez ici les formulaires et les éléments pour planifier les cours, les sessions, etc. -->
     </div>
 </div>
+

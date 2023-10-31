@@ -36,4 +36,8 @@
   background-color: blue;
   
   }
+  .demandee{
+    display: flex;
+    flex-direction: column;
+  }
   

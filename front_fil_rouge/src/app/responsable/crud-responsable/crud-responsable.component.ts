@@ -6,6 +6,12 @@ import { Session } from '../../model/session';
 import { DatePipe } from '@angular/common';
 import { CalendarMonthViewDay } from 'angular-calendar';
 import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogContentComponent } from 'src/app/responsable/crud-responsable/ajoutannee/ajoutannee.component';
+import { AjoutprofComponent } from './ajoutprof/ajoutprof.component';
+import { AjoutsalleComponent } from './ajoutsalle/ajoutsalle.component';
+import { AjoutmoduleComponent } from './ajoutmodule/ajoutmodule.component';
+import { AjoutsemestreComponent } from './ajoutsemestre/ajoutsemestre.component';
 @Component({
   selector: 'app-crud-responsable',
   templateUrl: './crud-responsable.component.html',
@@ -17,11 +23,11 @@ export class CrudResponsableComponent implements OnInit {
   events: CalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
   nouvelleAnnee: string = '';
-  constructor(private apiService: ApiService, private toastr: ToastrService,private datePipe: DatePipe) {}classes: any[] = [];
+  constructor(private apiService: ApiService, private toastr: ToastrService,private datePipe: DatePipe,private dialog: MatDialog) {}classes: any[] = [];
   professeurs: any[] = [];
   ngOnInit(): void {
-    this.fetchClasses();
-    this.fetchProfesseurs();
+    // this.fetchClasses();
+    // this.fetchProfesseurs();
     // this.creeAnnee(valeur:string);
   }
 
@@ -30,55 +36,17 @@ export class CrudResponsableComponent implements OnInit {
     this.showModal = true;
   }
 
-  closeModal() {
-    this.showModal = false;
-  }
+  // closeModal() {
+  //   this.showModal = false;
+  // }
 
 
-  ajouterAnnee(nouvelleAnnee: string) {
-    console.log(this.nouvelleAnnee);
-    
-    this.apiService.createAnnee(nouvelleAnnee).subscribe(
-      (response) => {
-        console.log('L\'année a été créée avec succès :', response);
-        this.toastr.success('L\'année a été ajoutée avec succès', 'Succès');
-        this.showModal=false 
-        // La notification de succès sera affichée sur votre écran
-      },
-      (error) => {
-        console.error('Erreur lors de la création de l\'année :', error);
-        this.toastr.error('Une erreur s\'est produite lors de l\'ajout de l\'année', 'Erreur');
-        // La notification d'erreur sera affichée sur votre écran
-      }
-    );
-  }
   
 
-  fetchClasses() {
-    this.apiService.getClasses().subscribe((data) => {
-      this.classes = data;
-    });
-  }
-
-  fetchProfesseurs() {
-    this.apiService.getProfesseurs().subscribe((data) => {
-      this.professeurs = data;
-    });
-  }
+ 
 
 
-  dayClicked({ day, sourceEvent }: { day: CalendarMonthViewDay<any>; sourceEvent: MouseEvent | KeyboardEvent }): void {
-    const formattedDate = this.formatDate(day.date);
-    this.apiService.getSessionsByDate(formattedDate).subscribe(sessions => {
-      this.events = sessions.map(session => {
-        return {
-          title: session.mode,
-          start: new Date(session.date + ' ' + session.heure_debut),
-          end: new Date(session.date + ' ' + session.heure_fin),
-        };
-      });
-    });
-}
+ 
 
 
   
@@ -88,5 +56,63 @@ export class CrudResponsableComponent implements OnInit {
     // Utilisez Angular DatePipe pour formater la date
     return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
   }
+
+  ouvrirModalAjoutAnnee() {
+    const dialogRef = this.dialog.open(DialogContentComponent, {
+      width: '400px', // Ajustez la largeur selon vos besoins
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Modal fermée', result);
+      // Traitez le résultat de la modal ici si nécessaire
+    });
+  }
+  ouvrirModalAjoutProfd() {
+    const dialogRef = this.dialog.open(AjoutprofComponent, {
+      width: '400px', // Ajustez la largeur selon vos besoins
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Modal fermée', result);
+      // Traitez le résultat de la modal ici si nécessaire
+    });
+  }
+  ouvrirModalAjoutSalle() {
+    const dialogRef = this.dialog.open(AjoutsalleComponent, {
+      width: '400px', // Ajustez la largeur selon vos besoins
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Modal fermée', result);
+      // Traitez le résultat de la modal ici si nécessaire
+    });
+  }
+  ouvrirModalAjoutModule() {
+    const dialogRef = this.dialog.open(AjoutmoduleComponent, {
+      width: '400px', // Ajustez la largeur selon vos besoins
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Modal fermée', result);
+      // Traitez le résultat de la modal ici si nécessaire
+    });
+  }
+  ouvrirModalAjoutSemestre() {
+    const dialogRef = this.dialog.open(AjoutsemestreComponent, {
+      width: '400px', // Ajustez la largeur selon vos besoins
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Modal fermée', result);
+      // Traitez le résultat de la modal ici si nécessaire
+    });
+  }
+  // ...
+
+// Variables pour contrôler la visibilité des modals
+
+
+// ...
+
   
 }

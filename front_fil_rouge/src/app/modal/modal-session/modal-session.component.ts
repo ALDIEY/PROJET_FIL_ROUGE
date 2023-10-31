@@ -12,6 +12,8 @@ import Swal from 'sweetalert2';
 export class ModalSessionComponent implements OnInit {
   @Input() session: any; 
   // sessionId: number=0
+  annulationSessionDemandee: boolean = false;
+  showDemandeAnnulationButton: boolean = true;
 motif:string=''
 showDemandeModal: boolean = false;
 demandeAnnulationForm: FormGroup;
@@ -28,6 +30,7 @@ demandeAnnulationForm: FormGroup;
   demanderAnnulation(): void {
     // Afficher le modal de demande d'annulation
     this.showDemandeModal = true;
+    this.showDemandeAnnulationButton=false
   }
   
   closeDialog(): void {
@@ -49,14 +52,27 @@ demandeAnnulationForm: FormGroup;
     this.apiService.annulerSession(sessionId).subscribe(
       response => {
         console.log(response);
-        if (response.message === 'session déja annuler') {
+        if (response.message ==='Session déjà annulée') {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'La session est déjà annulée!',
+
             // footer: '<a href="">Pourquoi ce problème?</a>'
           });
-        } else {
+          this.closeDialog()
+        }
+        else  if (response.message == 'session déja valider') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'La session est déjà valider!',
+            // footer: '<a href="">Pourquoi ce problème?</a>'
+          });
+        }
+        
+        else if (response.message=='Session annulée avec succès') {
+          
           Swal.fire({
             icon: 'success',
             title: 'Succès!',
@@ -67,7 +83,8 @@ demandeAnnulationForm: FormGroup;
               window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
             }
           });
-        }
+        
+        } 
       },
       error => {
         console.error('Erreur lors de l\'annulation de la session :', error);
@@ -150,11 +167,46 @@ console.log(formdata);
               window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
             }
           });
-        } else  if (response.message==='Cette session est déjà annulée.') {
+        } else  if (response.message==='Cette session est déjà annulée ou validée.') {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Cette session est déjà annulée ou n\'existe pas.',
+            text: 'Cette session est déjà annulée ou validée.',
+          })
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.closeDialog()
+
+              // window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
+            }
+          });
+          // this.closeDialog()
+        }
+        else  if (response.message==='Une demande d\'annulation pour cette session a déjà été soumise.') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Une demande d\'annulation pour cette session a déjà été soumise.',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.closeDialog()
+
+              // window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
+            }
+          });
+          // this.closeDialog()
+        }
+        else  if (response.message==='Cette session a déjà eu lieu.') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Cette session a déjà eu lieu.',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.closeDialog()
+
+              // window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
+            }
           });
           // this.closeDialog()
         } else{
@@ -162,6 +214,12 @@ console.log(formdata);
             icon: 'error',
             title: 'Oops...',
             text: 'Votre demande d\'annulation de session n\'a pas pu être soumise. Veuillez réessayer plus tard.',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.closeDialog()
+
+              // window.location.reload(); // Actualisez la page après la confirmation de l'utilisateur
+            }
           });
         }
       },

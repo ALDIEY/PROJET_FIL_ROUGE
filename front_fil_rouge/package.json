@@ -31,6 +31,7 @@
     "date-fns": "^2.30.0",
     "json-serve": "^0.1.0",
     "ngx-bootstrap": "^11.0.2",
+    "ngx-pagination": "^6.0.3",
     "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.7.32",

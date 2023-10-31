@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Annees;
 use App\Models\Semestres;
 use Illuminate\Http\Request;
 
@@ -15,15 +16,16 @@ class SemestreController extends Controller
     {
         $request->validate([
             'libelle' => 'required|string|max:255',
-            'statut' => 'required|string|max:255',
-            'annees_id' => 'required|exists:annees,id', // Assurez-vous que l'année existe
+            // 'statut' => 'required|string|max:255',
+            // 'annees_id' => 'required|exists:annees,id', // Assurez-vous que l'année existe
         ]);
-
+$anne=Annees::where('statut',1)->first();
+$annes=$anne->id;
         // Création du nouveau semestre
         $semestre = Semestres::create([
             'libelle' => $request->input('libelle'),
-            'statut' => $request->input('statut'),
-            'annees_id' => $request->input('annees_id'),
+            // 'statut' => $request->input('statut'),
+            'annees_id' => $annes,
         ]);
 
         return response()->json(['message' => 'Semestre ajouté avec succès', 'semestre' => $semestre], 201);

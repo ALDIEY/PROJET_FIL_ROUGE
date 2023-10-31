@@ -2,10 +2,10 @@
 <app-responsable></app-responsable>
 
 <div class="container mx-auto h-screen max-w-4xl bg-white p-4">
-  <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mt-4" (click)="ouvrirModale()">
+  <button class="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" (click)="ouvrirModale()">
     Ajouter une cours
   </button>  
-  <h1 class="text-black text-3xl font-semibold mb-4">Liste des Cours</h1>
+  <h1 class="bg-cyan-800 text-white text-3xl font-semibold mb-4">Liste des Cours</h1>
 
   <!-- Ajoutez des boutons ou des menus déroulants pour permettre le filtrage -->
   <div class="mb-4">
@@ -13,23 +13,40 @@
     <button  (click)="filtre = 'en_cours'; appliquerFiltre();" class="mx-2 text-black">En cours</button>
     <button class="text-black" (click)="filtre = 'termines'; appliquerFiltre();">Terminés</button>
   </div>
-
+  <h2 class="text-black text-xl font-semibold mb-2">Filtrer par Module</h2>
+  <div class="mb-4">
+    <label for="moduleSelect" class="block text-sm font-medium text-gray-600 mb-2">Filtrer par Module</label>
+    <select id="moduleSelect" [(ngModel)]="moduleId" (change)="appliquerFiltreModule()" class="form-control">
+      <option *ngFor="let module of modules" [ngValue]="module.id">{{ module.libelle }}</option>
+    </select>
+  </div>
+  
+  
+  <ng-template #aucunCoursTrouve>
+    <div class="alert alert-info">
+      Aucun cours trouvé pour ce module.
+    </div>
+  </ng-template>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     <div id="btnVoirEtudiants">
       </div>
       <ng-template appSimplePaginator [items]="coursFiltres" [pageSize]="pageSize" let-pageItems>
-    <div *ngFor="let cour of coursFiltres" class="bg-white p-6 rounded shadow">
-        <button class="btn btn-primary"  [routerLink]="['/etudiants', cour.id]" (click)="voirEtudiants(cour.id)">Voir les étudiants</button>
+    <div *ngFor="let cour of coursFiltres | paginate: { itemsPerPage: 5, currentPage: p }" class="bg-white p-6 rounded shadow">
+        <button class="bg-cyan-800 btn btn-primary text-white"  [routerLink]="['/etudiants', cour.id]" (click)="voirEtudiants(cour.id)">Voir les étudiants</button>
 
       <h2 class="text-black text-xl font-semibold mb-2">{{ cour.module }}</h2>
       <p class="text-black">{{ cour.professeurs }}</p>
       <p class="text-black">{{ cour.nbr_heure }}</p>
-      <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mt-4" (click)="ouvrirModal(cour.id)">Ajouter une session</button> 
+      <button class="bg-cyan-800 hover:bg-cyan-700 text-black font-bold py-2 px-4 rounded mt-4 text-white" (click)="ouvrirModal(cour.id)">Ajouter une session</button> 
       </div>
+
     </ng-template>
+
+
   </div>
   <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
 
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 
 </div>
 <!-- Modal -->

@@ -1,0 +1,37 @@
+<app-attache></app-attache>
+<h2 class="text-2xl font-bold mb-4">LES DEMANDES D'ANNULATION</h2>
+
+<div *ngIf="demandes.length === 0" class="text-gray-500 text-center py-4">
+  Aucune demande d'annulation n'est faite.
+</div>
+<table class="min-w-full bg-white border border-gray-300">
+    <thead>
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DATE</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MOTIF</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">MODULE</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CLASSE</th>
+        <!-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>  -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sessions of demandes | paginate: { itemsPerPage: 5, currentPage: p }">
+        <td class="px-6 py-4 whitespace-nowrap">{{ getNomJour(sessions.session.date) }},{{ sessions.session.date | date: 'dd/MM/yyyy' }}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ sessions.motif}}</td>
+
+        <td class="px-6 py-4 whitespace-nowrap">{{ sessions.session.cours.module}}</td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ sessions.session.classe}}</td>
+
+        <!-- <td class="px-6 py-4 whitespace-nowrap">
+          <span *ngIf="session.etat === 'En Attente'" class="bg-yellow-200 text-yellow-800 py-1 px-3 rounded-full">{{ session.etat }}</span>
+          <span *ngIf="session.etat === 'Terminé'" class="bg-green-200 text-green-800 py-1 px-3 rounded-full">{{ session.etat }}</span>
+        </td> -->
+        <td class="px-6 py-4 whitespace-nowrap">
+          <!-- Boutons d'action -->
+          <button   class="bg-green-500 text-white px-3 py-1 rounded-full mr-2" (click)="validerDemande(sessions.id)" >Valider demande</button>
+          <button  class="bg-red-500 text-white px-3 py-1 rounded-full" (click)="annulerDemande(sessions.id)">Annuler demande</button>
+        </td>
+      </tr>
+    </tbody>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+  </table>
